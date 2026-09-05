@@ -87,6 +87,14 @@ model MarketSnapshot {
   price  Decimal
   volume Decimal?
 
+  // OHLCV extended fields (populated by real market data providers)
+  open             Decimal?
+  previousClose    Decimal?
+  dayHigh          Decimal?
+  dayLow           Decimal?
+  fiftyTwoWeekHigh Decimal?
+  fiftyTwoWeekLow  Decimal?
+
   marketTimestamp DateTime
   fetchedAt       DateTime @default(now())
 

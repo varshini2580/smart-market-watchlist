@@ -6146,11 +6146,23 @@ export namespace Prisma {
   export type MarketSnapshotAvgAggregateOutputType = {
     price: Decimal | null
     volume: Decimal | null
+    open: Decimal | null
+    previousClose: Decimal | null
+    dayHigh: Decimal | null
+    dayLow: Decimal | null
+    fiftyTwoWeekHigh: Decimal | null
+    fiftyTwoWeekLow: Decimal | null
   }
 
   export type MarketSnapshotSumAggregateOutputType = {
     price: Decimal | null
     volume: Decimal | null
+    open: Decimal | null
+    previousClose: Decimal | null
+    dayHigh: Decimal | null
+    dayLow: Decimal | null
+    fiftyTwoWeekHigh: Decimal | null
+    fiftyTwoWeekLow: Decimal | null
   }
 
   export type MarketSnapshotMinAggregateOutputType = {
@@ -6158,6 +6170,12 @@ export namespace Prisma {
     stockId: string | null
     price: Decimal | null
     volume: Decimal | null
+    open: Decimal | null
+    previousClose: Decimal | null
+    dayHigh: Decimal | null
+    dayLow: Decimal | null
+    fiftyTwoWeekHigh: Decimal | null
+    fiftyTwoWeekLow: Decimal | null
     marketTimestamp: Date | null
     fetchedAt: Date | null
     source: string | null
@@ -6168,6 +6186,12 @@ export namespace Prisma {
     stockId: string | null
     price: Decimal | null
     volume: Decimal | null
+    open: Decimal | null
+    previousClose: Decimal | null
+    dayHigh: Decimal | null
+    dayLow: Decimal | null
+    fiftyTwoWeekHigh: Decimal | null
+    fiftyTwoWeekLow: Decimal | null
     marketTimestamp: Date | null
     fetchedAt: Date | null
     source: string | null
@@ -6178,6 +6202,12 @@ export namespace Prisma {
     stockId: number
     price: number
     volume: number
+    open: number
+    previousClose: number
+    dayHigh: number
+    dayLow: number
+    fiftyTwoWeekHigh: number
+    fiftyTwoWeekLow: number
     marketTimestamp: number
     fetchedAt: number
     source: number
@@ -6188,11 +6218,23 @@ export namespace Prisma {
   export type MarketSnapshotAvgAggregateInputType = {
     price?: true
     volume?: true
+    open?: true
+    previousClose?: true
+    dayHigh?: true
+    dayLow?: true
+    fiftyTwoWeekHigh?: true
+    fiftyTwoWeekLow?: true
   }
 
   export type MarketSnapshotSumAggregateInputType = {
     price?: true
     volume?: true
+    open?: true
+    previousClose?: true
+    dayHigh?: true
+    dayLow?: true
+    fiftyTwoWeekHigh?: true
+    fiftyTwoWeekLow?: true
   }
 
   export type MarketSnapshotMinAggregateInputType = {
@@ -6200,6 +6242,12 @@ export namespace Prisma {
     stockId?: true
     price?: true
     volume?: true
+    open?: true
+    previousClose?: true
+    dayHigh?: true
+    dayLow?: true
+    fiftyTwoWeekHigh?: true
+    fiftyTwoWeekLow?: true
     marketTimestamp?: true
     fetchedAt?: true
     source?: true
@@ -6210,6 +6258,12 @@ export namespace Prisma {
     stockId?: true
     price?: true
     volume?: true
+    open?: true
+    previousClose?: true
+    dayHigh?: true
+    dayLow?: true
+    fiftyTwoWeekHigh?: true
+    fiftyTwoWeekLow?: true
     marketTimestamp?: true
     fetchedAt?: true
     source?: true
@@ -6220,6 +6274,12 @@ export namespace Prisma {
     stockId?: true
     price?: true
     volume?: true
+    open?: true
+    previousClose?: true
+    dayHigh?: true
+    dayLow?: true
+    fiftyTwoWeekHigh?: true
+    fiftyTwoWeekLow?: true
     marketTimestamp?: true
     fetchedAt?: true
     source?: true
@@ -6317,6 +6377,12 @@ export namespace Prisma {
     stockId: string
     price: Decimal
     volume: Decimal | null
+    open: Decimal | null
+    previousClose: Decimal | null
+    dayHigh: Decimal | null
+    dayLow: Decimal | null
+    fiftyTwoWeekHigh: Decimal | null
+    fiftyTwoWeekLow: Decimal | null
     marketTimestamp: Date
     fetchedAt: Date
     source: string
@@ -6346,6 +6412,12 @@ export namespace Prisma {
     stockId?: boolean
     price?: boolean
     volume?: boolean
+    open?: boolean
+    previousClose?: boolean
+    dayHigh?: boolean
+    dayLow?: boolean
+    fiftyTwoWeekHigh?: boolean
+    fiftyTwoWeekLow?: boolean
     marketTimestamp?: boolean
     fetchedAt?: boolean
     source?: boolean
@@ -6359,6 +6431,12 @@ export namespace Prisma {
     stockId?: boolean
     price?: boolean
     volume?: boolean
+    open?: boolean
+    previousClose?: boolean
+    dayHigh?: boolean
+    dayLow?: boolean
+    fiftyTwoWeekHigh?: boolean
+    fiftyTwoWeekLow?: boolean
     marketTimestamp?: boolean
     fetchedAt?: boolean
     source?: boolean
@@ -6370,6 +6448,12 @@ export namespace Prisma {
     stockId?: boolean
     price?: boolean
     volume?: boolean
+    open?: boolean
+    previousClose?: boolean
+    dayHigh?: boolean
+    dayLow?: boolean
+    fiftyTwoWeekHigh?: boolean
+    fiftyTwoWeekLow?: boolean
     marketTimestamp?: boolean
     fetchedAt?: boolean
     source?: boolean
@@ -6381,12 +6465,18 @@ export namespace Prisma {
     stockId?: boolean
     price?: boolean
     volume?: boolean
+    open?: boolean
+    previousClose?: boolean
+    dayHigh?: boolean
+    dayLow?: boolean
+    fiftyTwoWeekHigh?: boolean
+    fiftyTwoWeekLow?: boolean
     marketTimestamp?: boolean
     fetchedAt?: boolean
     source?: boolean
   }
 
-  export type MarketSnapshotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "stockId" | "price" | "volume" | "marketTimestamp" | "fetchedAt" | "source", ExtArgs["result"]["marketSnapshot"]>
+  export type MarketSnapshotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "stockId" | "price" | "volume" | "open" | "previousClose" | "dayHigh" | "dayLow" | "fiftyTwoWeekHigh" | "fiftyTwoWeekLow" | "marketTimestamp" | "fetchedAt" | "source", ExtArgs["result"]["marketSnapshot"]>
   export type MarketSnapshotInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     stock?: boolean | StockDefaultArgs<ExtArgs>
     attentionEvents?: boolean | MarketSnapshot$attentionEventsArgs<ExtArgs>
@@ -6410,6 +6500,12 @@ export namespace Prisma {
       stockId: string
       price: Prisma.Decimal
       volume: Prisma.Decimal | null
+      open: Prisma.Decimal | null
+      previousClose: Prisma.Decimal | null
+      dayHigh: Prisma.Decimal | null
+      dayLow: Prisma.Decimal | null
+      fiftyTwoWeekHigh: Prisma.Decimal | null
+      fiftyTwoWeekLow: Prisma.Decimal | null
       marketTimestamp: Date
       fetchedAt: Date
       source: string
@@ -6842,6 +6938,12 @@ export namespace Prisma {
     readonly stockId: FieldRef<"MarketSnapshot", 'String'>
     readonly price: FieldRef<"MarketSnapshot", 'Decimal'>
     readonly volume: FieldRef<"MarketSnapshot", 'Decimal'>
+    readonly open: FieldRef<"MarketSnapshot", 'Decimal'>
+    readonly previousClose: FieldRef<"MarketSnapshot", 'Decimal'>
+    readonly dayHigh: FieldRef<"MarketSnapshot", 'Decimal'>
+    readonly dayLow: FieldRef<"MarketSnapshot", 'Decimal'>
+    readonly fiftyTwoWeekHigh: FieldRef<"MarketSnapshot", 'Decimal'>
+    readonly fiftyTwoWeekLow: FieldRef<"MarketSnapshot", 'Decimal'>
     readonly marketTimestamp: FieldRef<"MarketSnapshot", 'DateTime'>
     readonly fetchedAt: FieldRef<"MarketSnapshot", 'DateTime'>
     readonly source: FieldRef<"MarketSnapshot", 'String'>
@@ -9654,6 +9756,12 @@ export namespace Prisma {
     stockId: 'stockId',
     price: 'price',
     volume: 'volume',
+    open: 'open',
+    previousClose: 'previousClose',
+    dayHigh: 'dayHigh',
+    dayLow: 'dayLow',
+    fiftyTwoWeekHigh: 'fiftyTwoWeekHigh',
+    fiftyTwoWeekLow: 'fiftyTwoWeekLow',
     marketTimestamp: 'marketTimestamp',
     fetchedAt: 'fetchedAt',
     source: 'source'
@@ -10068,6 +10176,12 @@ export namespace Prisma {
     stockId?: StringFilter<"MarketSnapshot"> | string
     price?: DecimalFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string
     volume?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    open?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    previousClose?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    dayLow?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFilter<"MarketSnapshot"> | Date | string
     fetchedAt?: DateTimeFilter<"MarketSnapshot"> | Date | string
     source?: StringFilter<"MarketSnapshot"> | string
@@ -10080,6 +10194,12 @@ export namespace Prisma {
     stockId?: SortOrder
     price?: SortOrder
     volume?: SortOrderInput | SortOrder
+    open?: SortOrderInput | SortOrder
+    previousClose?: SortOrderInput | SortOrder
+    dayHigh?: SortOrderInput | SortOrder
+    dayLow?: SortOrderInput | SortOrder
+    fiftyTwoWeekHigh?: SortOrderInput | SortOrder
+    fiftyTwoWeekLow?: SortOrderInput | SortOrder
     marketTimestamp?: SortOrder
     fetchedAt?: SortOrder
     source?: SortOrder
@@ -10095,6 +10215,12 @@ export namespace Prisma {
     stockId?: StringFilter<"MarketSnapshot"> | string
     price?: DecimalFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string
     volume?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    open?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    previousClose?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    dayLow?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFilter<"MarketSnapshot"> | Date | string
     fetchedAt?: DateTimeFilter<"MarketSnapshot"> | Date | string
     source?: StringFilter<"MarketSnapshot"> | string
@@ -10107,6 +10233,12 @@ export namespace Prisma {
     stockId?: SortOrder
     price?: SortOrder
     volume?: SortOrderInput | SortOrder
+    open?: SortOrderInput | SortOrder
+    previousClose?: SortOrderInput | SortOrder
+    dayHigh?: SortOrderInput | SortOrder
+    dayLow?: SortOrderInput | SortOrder
+    fiftyTwoWeekHigh?: SortOrderInput | SortOrder
+    fiftyTwoWeekLow?: SortOrderInput | SortOrder
     marketTimestamp?: SortOrder
     fetchedAt?: SortOrder
     source?: SortOrder
@@ -10125,6 +10257,12 @@ export namespace Prisma {
     stockId?: StringWithAggregatesFilter<"MarketSnapshot"> | string
     price?: DecimalWithAggregatesFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string
     volume?: DecimalNullableWithAggregatesFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    open?: DecimalNullableWithAggregatesFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    previousClose?: DecimalNullableWithAggregatesFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: DecimalNullableWithAggregatesFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    dayLow?: DecimalNullableWithAggregatesFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: DecimalNullableWithAggregatesFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: DecimalNullableWithAggregatesFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeWithAggregatesFilter<"MarketSnapshot"> | Date | string
     fetchedAt?: DateTimeWithAggregatesFilter<"MarketSnapshot"> | Date | string
     source?: StringWithAggregatesFilter<"MarketSnapshot"> | string
@@ -10535,6 +10673,12 @@ export namespace Prisma {
     id?: string
     price: Decimal | DecimalJsLike | number | string
     volume?: Decimal | DecimalJsLike | number | string | null
+    open?: Decimal | DecimalJsLike | number | string | null
+    previousClose?: Decimal | DecimalJsLike | number | string | null
+    dayHigh?: Decimal | DecimalJsLike | number | string | null
+    dayLow?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: Decimal | DecimalJsLike | number | string | null
     marketTimestamp: Date | string
     fetchedAt?: Date | string
     source: string
@@ -10547,6 +10691,12 @@ export namespace Prisma {
     stockId: string
     price: Decimal | DecimalJsLike | number | string
     volume?: Decimal | DecimalJsLike | number | string | null
+    open?: Decimal | DecimalJsLike | number | string | null
+    previousClose?: Decimal | DecimalJsLike | number | string | null
+    dayHigh?: Decimal | DecimalJsLike | number | string | null
+    dayLow?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: Decimal | DecimalJsLike | number | string | null
     marketTimestamp: Date | string
     fetchedAt?: Date | string
     source: string
@@ -10557,6 +10707,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     volume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    open?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previousClose?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
@@ -10569,6 +10725,12 @@ export namespace Prisma {
     stockId?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     volume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    open?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previousClose?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
@@ -10580,6 +10742,12 @@ export namespace Prisma {
     stockId: string
     price: Decimal | DecimalJsLike | number | string
     volume?: Decimal | DecimalJsLike | number | string | null
+    open?: Decimal | DecimalJsLike | number | string | null
+    previousClose?: Decimal | DecimalJsLike | number | string | null
+    dayHigh?: Decimal | DecimalJsLike | number | string | null
+    dayLow?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: Decimal | DecimalJsLike | number | string | null
     marketTimestamp: Date | string
     fetchedAt?: Date | string
     source: string
@@ -10589,6 +10757,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     volume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    open?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previousClose?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
@@ -10599,6 +10773,12 @@ export namespace Prisma {
     stockId?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     volume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    open?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previousClose?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
@@ -11054,6 +11234,12 @@ export namespace Prisma {
     stockId?: SortOrder
     price?: SortOrder
     volume?: SortOrder
+    open?: SortOrder
+    previousClose?: SortOrder
+    dayHigh?: SortOrder
+    dayLow?: SortOrder
+    fiftyTwoWeekHigh?: SortOrder
+    fiftyTwoWeekLow?: SortOrder
     marketTimestamp?: SortOrder
     fetchedAt?: SortOrder
     source?: SortOrder
@@ -11062,6 +11248,12 @@ export namespace Prisma {
   export type MarketSnapshotAvgOrderByAggregateInput = {
     price?: SortOrder
     volume?: SortOrder
+    open?: SortOrder
+    previousClose?: SortOrder
+    dayHigh?: SortOrder
+    dayLow?: SortOrder
+    fiftyTwoWeekHigh?: SortOrder
+    fiftyTwoWeekLow?: SortOrder
   }
 
   export type MarketSnapshotMaxOrderByAggregateInput = {
@@ -11069,6 +11261,12 @@ export namespace Prisma {
     stockId?: SortOrder
     price?: SortOrder
     volume?: SortOrder
+    open?: SortOrder
+    previousClose?: SortOrder
+    dayHigh?: SortOrder
+    dayLow?: SortOrder
+    fiftyTwoWeekHigh?: SortOrder
+    fiftyTwoWeekLow?: SortOrder
     marketTimestamp?: SortOrder
     fetchedAt?: SortOrder
     source?: SortOrder
@@ -11079,6 +11277,12 @@ export namespace Prisma {
     stockId?: SortOrder
     price?: SortOrder
     volume?: SortOrder
+    open?: SortOrder
+    previousClose?: SortOrder
+    dayHigh?: SortOrder
+    dayLow?: SortOrder
+    fiftyTwoWeekHigh?: SortOrder
+    fiftyTwoWeekLow?: SortOrder
     marketTimestamp?: SortOrder
     fetchedAt?: SortOrder
     source?: SortOrder
@@ -11087,6 +11291,12 @@ export namespace Prisma {
   export type MarketSnapshotSumOrderByAggregateInput = {
     price?: SortOrder
     volume?: SortOrder
+    open?: SortOrder
+    previousClose?: SortOrder
+    dayHigh?: SortOrder
+    dayLow?: SortOrder
+    fiftyTwoWeekHigh?: SortOrder
+    fiftyTwoWeekLow?: SortOrder
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -12274,6 +12484,12 @@ export namespace Prisma {
     id?: string
     price: Decimal | DecimalJsLike | number | string
     volume?: Decimal | DecimalJsLike | number | string | null
+    open?: Decimal | DecimalJsLike | number | string | null
+    previousClose?: Decimal | DecimalJsLike | number | string | null
+    dayHigh?: Decimal | DecimalJsLike | number | string | null
+    dayLow?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: Decimal | DecimalJsLike | number | string | null
     marketTimestamp: Date | string
     fetchedAt?: Date | string
     source: string
@@ -12284,6 +12500,12 @@ export namespace Prisma {
     id?: string
     price: Decimal | DecimalJsLike | number | string
     volume?: Decimal | DecimalJsLike | number | string | null
+    open?: Decimal | DecimalJsLike | number | string | null
+    previousClose?: Decimal | DecimalJsLike | number | string | null
+    dayHigh?: Decimal | DecimalJsLike | number | string | null
+    dayLow?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: Decimal | DecimalJsLike | number | string | null
     marketTimestamp: Date | string
     fetchedAt?: Date | string
     source: string
@@ -12400,6 +12622,12 @@ export namespace Prisma {
     stockId?: StringFilter<"MarketSnapshot"> | string
     price?: DecimalFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string
     volume?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    open?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    previousClose?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    dayLow?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: DecimalNullableFilter<"MarketSnapshot"> | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFilter<"MarketSnapshot"> | Date | string
     fetchedAt?: DateTimeFilter<"MarketSnapshot"> | Date | string
     source?: StringFilter<"MarketSnapshot"> | string
@@ -12803,6 +13031,12 @@ export namespace Prisma {
     id?: string
     price: Decimal | DecimalJsLike | number | string
     volume?: Decimal | DecimalJsLike | number | string | null
+    open?: Decimal | DecimalJsLike | number | string | null
+    previousClose?: Decimal | DecimalJsLike | number | string | null
+    dayHigh?: Decimal | DecimalJsLike | number | string | null
+    dayLow?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: Decimal | DecimalJsLike | number | string | null
     marketTimestamp: Date | string
     fetchedAt?: Date | string
     source: string
@@ -12814,6 +13048,12 @@ export namespace Prisma {
     stockId: string
     price: Decimal | DecimalJsLike | number | string
     volume?: Decimal | DecimalJsLike | number | string | null
+    open?: Decimal | DecimalJsLike | number | string | null
+    previousClose?: Decimal | DecimalJsLike | number | string | null
+    dayHigh?: Decimal | DecimalJsLike | number | string | null
+    dayLow?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: Decimal | DecimalJsLike | number | string | null
     marketTimestamp: Date | string
     fetchedAt?: Date | string
     source: string
@@ -12899,6 +13139,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     volume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    open?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previousClose?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
@@ -12910,6 +13156,12 @@ export namespace Prisma {
     stockId?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     volume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    open?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previousClose?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
@@ -13070,6 +13322,12 @@ export namespace Prisma {
     id?: string
     price: Decimal | DecimalJsLike | number | string
     volume?: Decimal | DecimalJsLike | number | string | null
+    open?: Decimal | DecimalJsLike | number | string | null
+    previousClose?: Decimal | DecimalJsLike | number | string | null
+    dayHigh?: Decimal | DecimalJsLike | number | string | null
+    dayLow?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: Decimal | DecimalJsLike | number | string | null
     marketTimestamp: Date | string
     fetchedAt?: Date | string
     source: string
@@ -13126,6 +13384,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     volume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    open?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previousClose?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
@@ -13136,6 +13400,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     volume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    open?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previousClose?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string
@@ -13146,6 +13416,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     volume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    open?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previousClose?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dayLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekHigh?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fiftyTwoWeekLow?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     marketTimestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     source?: StringFieldUpdateOperationsInput | string

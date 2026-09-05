@@ -156,6 +156,12 @@ exports.Prisma.MarketSnapshotScalarFieldEnum = {
   stockId: 'stockId',
   price: 'price',
   volume: 'volume',
+  open: 'open',
+  previousClose: 'previousClose',
+  dayHigh: 'dayHigh',
+  dayLow: 'dayLow',
+  fiftyTwoWeekHigh: 'fiftyTwoWeekHigh',
+  fiftyTwoWeekLow: 'fiftyTwoWeekLow',
   marketTimestamp: 'marketTimestamp',
   fetchedAt: 'fetchedAt',
   source: 'source'

@@ -1,0 +1,148 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum WatchIntent {
+  HOLDING
+  INTERESTED
+}
+
+enum AttentionType {
+  LARGE_PRICE_CHANGE
+  TARGET_REACHED
+  PURCHASE_PRICE_CROSSED
+  VOLUME_SPIKE
+}
+
+enum AttentionSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  watchlists       Watchlist[]
+  checkpoints      UserStockCheckpoint[]
+  attentionEvents  AttentionEvent[]
+}
+
+model Watchlist {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  createdAt DateTime @default(now())
+
+  user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items WatchlistItem[]
+
+  @@index([userId])
+}
+
+model Stock {
+  id       String @id @default(uuid())
+  symbol   String
+  name     String
+  exchange String
+
+  watchlistItems WatchlistItem[]
+  snapshots      MarketSnapshot[]
+  checkpoints    UserStockCheckpoint[]
+  attentionEvents AttentionEvent[]
+
+  @@unique([symbol, exchange])
+}
+
+model WatchlistItem {
+  id          String      @id @default(uuid())
+  watchlistId String
+  stockId     String
+
+  intent        WatchIntent
+  purchasePrice Decimal?
+  targetPrice   Decimal?
+
+  addedAt DateTime @default(now())
+
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+  stock     Stock     @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@unique([watchlistId, stockId])
+  @@index([stockId])
+}
+
+model MarketSnapshot {
+  id              String   @id @default(uuid())
+  stockId         String
+
+  price           Decimal
+  volume          Decimal?
+
+  // OHLCV extended fields (populated by real market data providers)
+  open            Decimal?
+  previousClose   Decimal?
+  dayHigh         Decimal?
+  dayLow          Decimal?
+  fiftyTwoWeekHigh Decimal?
+  fiftyTwoWeekLow  Decimal?
+
+  marketTimestamp DateTime
+  fetchedAt       DateTime @default(now())
+
+  source String
+
+  stock Stock @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  attentionEvents AttentionEvent[]
+
+  @@index([stockId, marketTimestamp])
+}
+
+model UserStockCheckpoint {
+  id                      String   @id @default(uuid())
+  userId                  String
+  stockId                 String
+
+  lastSeenPrice            Decimal
+  lastSeenMarketTimestamp  DateTime
+  lastViewedAt             DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stock Stock @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, stockId])
+  @@index([stockId])
+}
+
+model AttentionEvent {
+  id             String             @id @default(uuid())
+  userId         String
+  stockId        String
+  snapshotId     String
+
+  type           AttentionType
+  severity       AttentionSeverity
+
+  previousPrice  Decimal?
+  currentPrice   Decimal?
+  changePercent  Decimal?
+
+  detectedAt     DateTime @default(now())
+
+  user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stock   Stock          @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  snapshot MarketSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, snapshotId])
+  @@index([userId, detectedAt])
+  @@index([stockId, detectedAt])
+}

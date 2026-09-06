@@ -1,32 +1,36 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AuthRequest } from "../middleware/auth.middleware";
 import { attentionService } from "../services/attention.service";
 
 export const getUserAttention = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
-    const userId = req.params.userId as string;
+    let userId = req.user?.id;
+    const paramUserId = typeof req.params.userId === "string" ? req.params.userId : undefined;
 
-    const limitParam = req.query.limit as string | undefined;
-
-    const limit = limitParam
-      ? Number(limitParam)
-      : undefined;
+    if (paramUserId) {
+      if (userId && userId !== paramUserId) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden: You cannot view another user's attention events",
+        });
+      }
+      userId = userId || paramUserId;
+    }
 
     if (!userId) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
-        message: "userId is required",
+        message: "Authentication required",
       });
     }
 
-    if (
-      limit !== undefined &&
-      (!Number.isInteger(limit) ||
-        limit <= 0 ||
-        limit > 100)
-    ) {
+    const limitParam = req.query.limit as string | undefined;
+    const limit = limitParam ? Number(limitParam) : 20;
+
+    if (!Number.isInteger(limit) || limit <= 0 || limit > 100) {
       return res.status(400).json({
         success: false,
         message: "limit must be between 1 and 100",

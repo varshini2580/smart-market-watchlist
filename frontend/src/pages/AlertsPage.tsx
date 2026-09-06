@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 
-import { API_URL as API, DEFAULT_USER_ID as USER_ID } from "../config";
+import { API_URL as API } from "../config";
 
 interface AttentionEvent {
     id: string;
@@ -61,8 +61,8 @@ export default function AlertsPage() {
             setLoading(true);
             setError(null);
             const [attnRes, dashRes] = await Promise.all([
-                axios.get(`${API}/attention/${USER_ID}`).catch(() => ({ data: { events: [] } })),
-                axios.get(`${API}/dashboard/${USER_ID}`).catch(() => ({ data: { dashboard: null } })),
+                axios.get(`${API}/attention`).catch(() => ({ data: { events: [] } })),
+                axios.get(`${API}/dashboard`).catch(() => ({ data: { dashboard: null } })),
             ]);
 
             const rawList = Array.isArray(attnRes.data?.events)

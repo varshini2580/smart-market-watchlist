@@ -3,12 +3,16 @@ import {
   getDashboard,
   refreshDashboard,
 } from "../controllers/dashboard.controller";
+import { requireAuth, optionalAuth } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.get("/:userId", getDashboard);
+// Primary authenticated endpoints (determines user from session token)
+router.get("/", requireAuth, getDashboard);
+router.post("/refresh", requireAuth, refreshDashboard);
 
-// On-demand smart refresh: only fetches stale data
-router.post("/:userId/refresh", refreshDashboard);
+// Legacy routes with ownership verification
+router.get("/:userId", optionalAuth, getDashboard);
+router.post("/:userId/refresh", optionalAuth, refreshDashboard);
 
 export default router;

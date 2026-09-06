@@ -5,7 +5,7 @@ import {
     PieChart, Pie, Legend, ResponsiveContainer, CartesianGrid,
 } from "recharts";
 
-import { API_URL as API, DEFAULT_USER_ID as USER_ID } from "../config";
+import { API_URL as API } from "../config";
 
 interface WatchlistItem {
     id: string;
@@ -57,8 +57,8 @@ export default function InsightsPage() {
             setLoading(true);
             setError(null);
             const [dashRes, attnRes] = await Promise.all([
-                axios.get(`${API}/dashboard/${USER_ID}`).catch(() => ({ data: { dashboard: null } })),
-                axios.get(`${API}/attention/${USER_ID}`).catch(() => ({ data: { events: [] } })),
+                axios.get(`${API}/dashboard`).catch(() => ({ data: { dashboard: null } })),
+                axios.get(`${API}/attention`).catch(() => ({ data: { events: [] } })),
             ]);
 
             const dashStocks = Array.isArray(dashRes.data?.dashboard?.stocks)

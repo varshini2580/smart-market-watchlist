@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import {
   createWatchlist,
   getUserWatchlists,
@@ -7,19 +6,23 @@ import {
   removeStock,
   removeStockByItemId,
 } from "../controllers/watchlist.controller";
+import { requireAuth, optionalAuth } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.post("/", createWatchlist);
+// Primary authenticated endpoints
+router.get("/", requireAuth, getUserWatchlists);
+router.post("/", requireAuth, createWatchlist);
 
-router.get("/user/:userId", getUserWatchlists);
+// Legacy user param route with ownership verification
+router.get("/user/:userId", optionalAuth, getUserWatchlists);
 
-router.post("/:watchlistId/stocks", addStock);
+router.post("/:watchlistId/stocks", optionalAuth, addStock);
 
 // Secure remove by item ID (ownership validated server-side)
-router.delete("/items/:itemId", removeStockByItemId);
+router.delete("/items/:itemId", optionalAuth, removeStockByItemId);
 
 // Legacy: remove by watchlistId + stockId
-router.delete("/:watchlistId/stocks/:stockId", removeStock);
+router.delete("/:watchlistId/stocks/:stockId", optionalAuth, removeStock);
 
 export default router;

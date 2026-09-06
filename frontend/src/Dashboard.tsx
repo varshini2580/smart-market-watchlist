@@ -4,7 +4,7 @@ import axios from "axios";
 import "./App.css";
 
 
-import { API_BASE as API_URL, DEFAULT_USER_ID as USER_ID } from "./config";
+import { API_BASE as API_URL } from "./config";
 
 // ── Types ────────────────────────────────────────────────────────────
 type Stock = {
@@ -213,7 +213,7 @@ function Dashboard() {
   const fetchDashboard = useCallback(async (retryCount = 0) => {
     try {
       const res = await axios.get(
-        `${API_URL}/api/dashboard/${USER_ID}`,
+        `${API_URL}/api/dashboard`,
         { timeout: 8000 }
       );
       const dash = res.data.dashboard;
@@ -265,7 +265,7 @@ function Dashboard() {
     setRefreshing(true);
     try {
       const res = await axios.post(
-        `${API_URL}/api/dashboard/${USER_ID}/refresh`,
+        `${API_URL}/api/dashboard/refresh`,
         {},
         { timeout: 10000 }
       );
@@ -356,7 +356,7 @@ function Dashboard() {
       setAddError("");
 
       const wRes = await axios.get(
-        `${API_URL}/api/watchlists/user/${USER_ID}`
+        `${API_URL}/api/watchlists`
       );
       const watchlists = wRes.data.watchlists || [];
 
@@ -402,8 +402,7 @@ function Dashboard() {
     setRemoving(true);
     try {
       await axios.delete(
-        `${API_URL}/api/watchlists/items/${removeTarget.watchlistItemId}`,
-        { data: { userId: USER_ID } }
+        `${API_URL}/api/watchlists/items/${removeTarget.watchlistItemId}`
       );
 
       setDashboard((prev) => {

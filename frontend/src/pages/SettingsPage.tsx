@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const STORAGE_KEY = "smw-settings";
 
@@ -29,6 +30,7 @@ function saveSettings(s: Settings) {
 }
 
 export default function SettingsPage() {
+    const { user, logout } = useAuth();
     const [settings, setSettings] = useState<Settings>(loadSettings);
     const [saved, setSaved] = useState(false);
 
@@ -79,6 +81,75 @@ export default function SettingsPage() {
 
             <div className="page-body">
                 <div className="settings-grid">
+                    {/* Account & Profile */}
+                    {user && (
+                        <div className="settings-section" style={{ animationDelay: "0.02s" }}>
+                            <div className="settings-section-header">
+                                <h3>👤 Account & Session</h3>
+                                <p>Authenticated user profile and credentials</p>
+                            </div>
+                            <div className="settings-row">
+                                <div className="settings-row-label">
+                                    <strong>Name</strong>
+                                    <span>Your display name</span>
+                                </div>
+                                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>
+                                    {user.name}
+                                </span>
+                            </div>
+                            <div className="settings-row">
+                                <div className="settings-row-label">
+                                    <strong>Email</strong>
+                                    <span>Connected account address</span>
+                                </div>
+                                <span style={{ fontSize: 13, color: "var(--text-secondary)", fontFamily: "var(--font-mono, monospace)" }}>
+                                    {user.email}
+                                </span>
+                            </div>
+                            <div className="settings-row">
+                                <div className="settings-row-label">
+                                    <strong>Authentication Method</strong>
+                                    <span>How you signed into Smart Market Watchlist</span>
+                                </div>
+                                <span
+                                    style={{
+                                        fontSize: 12, fontWeight: 700,
+                                        color: user.authProvider === "google" ? "#4285F4" : "var(--purple-light)",
+                                        background: user.authProvider === "google" ? "rgba(66, 133, 244, 0.1)" : "var(--purple-dim)",
+                                        border: user.authProvider === "google" ? "1px solid rgba(66, 133, 244, 0.25)" : "1px solid var(--purple-border)",
+                                        padding: "4px 10px",
+                                        borderRadius: 999,
+                                        textTransform: "capitalize",
+                                    }}
+                                >
+                                    {user.authProvider === "google" ? "Google OAuth" : "Email & Password"}
+                                </span>
+                            </div>
+                            <div className="settings-row">
+                                <div className="settings-row-label">
+                                    <strong>Session Management</strong>
+                                    <span>Terminate this session and return to login</span>
+                                </div>
+                                <button
+                                    className="btn-danger"
+                                    onClick={logout}
+                                    style={{
+                                        fontSize: 12,
+                                        padding: "6px 14px",
+                                        background: "rgba(239, 68, 68, 0.12)",
+                                        color: "var(--negative)",
+                                        border: "1px solid rgba(239, 68, 68, 0.25)",
+                                        borderRadius: 8,
+                                        cursor: "pointer",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Appearance */}
                     <div className="settings-section" style={{ animationDelay: "0.04s" }}>
                         <div className="settings-section-header">

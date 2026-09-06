@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 
-import { API_URL as API, DEFAULT_USER_ID as USER_ID } from "../config";
+import { API_URL as API } from "../config";
 
 interface Stock {
     id: string;
@@ -94,9 +94,9 @@ export default function WatchlistPage() {
             setLoading(true);
             setError(null);
             const [watchlistsRes, stocksRes, dashRes] = await Promise.all([
-                axios.get(`${API}/watchlists/user/${USER_ID}`).catch(() => ({ data: { watchlists: [] } })),
+                axios.get(`${API}/watchlists`).catch(() => ({ data: { watchlists: [] } })),
                 axios.get(`${API}/stocks`).catch(() => ({ data: { stocks: [] } })),
-                axios.get(`${API}/dashboard/${USER_ID}`).catch(() => ({ data: { dashboard: null } })),
+                axios.get(`${API}/dashboard`).catch(() => ({ data: { dashboard: null } })),
             ]);
 
             const rawWatchlists = Array.isArray(watchlistsRes.data?.watchlists)
@@ -244,9 +244,7 @@ export default function WatchlistPage() {
         if (!removeItem || !primaryWatchlist) return;
         try {
             setRemoving(true);
-            await axios.delete(`${API}/watchlists/items/${removeItem.id}`, {
-                data: { userId: USER_ID },
-            });
+            await axios.delete(`${API}/watchlists/items/${removeItem.id}`);
             setRemoveItem(null);
             await load();
             showToast(`${removeItem.stock.symbol} removed`, "success");

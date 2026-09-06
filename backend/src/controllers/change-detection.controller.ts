@@ -1,19 +1,32 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AuthRequest } from "../middleware/auth.middleware";
 import { changeDetectionService } from "../services/change-detection.service";
 
 export const detectChanges = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
-    const userId = req.params.userId as string;
-    const symbol = req.params.symbol as string;
-    const exchange = req.query.exchange as string;
+    let userId = req.user?.id;
+    const paramUserId = typeof req.params.userId === "string" ? req.params.userId : undefined;
 
-    if (!userId || !symbol || !exchange) {
+    if (paramUserId) {
+      if (userId && userId !== paramUserId) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden: You cannot trigger change detection for another user",
+        });
+      }
+      userId = userId || paramUserId;
+    }
+
+    const symbol = req.params.symbol as string;
+    const exchange = (req.query.exchange as string) || "NSE";
+
+    if (!userId || !symbol) {
       return res.status(400).json({
         success: false,
-        message: "userId, symbol and exchange are required",
+        message: "Authentication and symbol are required",
       });
     }
 

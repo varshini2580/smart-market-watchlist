@@ -1,12 +1,22 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AuthRequest } from "../middleware/auth.middleware";
 import { watchlistService } from "../services/watchlist.service";
+import { watchlistRepository } from "../repositories/watchlist.repository";
 
 export const createWatchlist = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
-    const { userId, name } = req.body;
+    const userId = req.user?.id || req.body.userId;
+    const { name } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Authentication required",
+      });
+    }
 
     const watchlist = await watchlistService.createWatchlist(
       userId,
@@ -31,11 +41,29 @@ export const createWatchlist = async (
 };
 
 export const getUserWatchlists = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
-    const userId = req.params.userId as string;
+    let userId = req.user?.id;
+    const paramUserId = typeof req.params.userId === "string" ? req.params.userId : undefined;
+
+    if (paramUserId) {
+      if (userId && userId !== paramUserId) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden: You cannot access another user's watchlists",
+        });
+      }
+      userId = userId || paramUserId;
+    }
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Authentication required",
+      });
+    }
 
     const watchlists =
       await watchlistService.getUserWatchlists(userId);
@@ -55,7 +83,7 @@ export const getUserWatchlists = async (
 };
 
 export const addStock = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
@@ -67,6 +95,23 @@ export const addStock = async (
       purchasePrice,
       targetPrice,
     } = req.body;
+
+    // Validate watchlist ownership if authenticated
+    if (req.user) {
+      const watchlist = await watchlistRepository.findById(watchlistId);
+      if (!watchlist) {
+        return res.status(404).json({
+          success: false,
+          message: "Watchlist not found",
+        });
+      }
+      if (watchlist.userId !== req.user.id) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden: You cannot modify another user's watchlist",
+        });
+      }
+    }
 
     const item = await watchlistService.addStock(
       watchlistId,
@@ -96,20 +141,19 @@ export const addStock = async (
 /**
  * Remove a watchlist item by its own ID.
  * Expects: DELETE /api/watchlists/items/:itemId
- * Body: { userId }
  */
 export const removeStockByItemId = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
     const itemId = req.params.itemId as string;
-    const userId = req.body.userId as string;
+    const userId = req.user?.id || (req.body.userId as string);
 
     if (!userId) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
-        message: "userId is required",
+        message: "Authentication required",
       });
     }
 
@@ -138,12 +182,22 @@ export const removeStockByItemId = async (
 
 /** Legacy controller kept for backward compat */
 export const removeStock = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
     const watchlistId = req.params.watchlistId as string;
     const stockId = req.params.stockId as string;
+
+    if (req.user) {
+      const watchlist = await watchlistRepository.findById(watchlistId);
+      if (watchlist && watchlist.userId !== req.user.id) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden: You cannot modify another user's watchlist",
+        });
+      }
+    }
 
     await watchlistService.removeStock(watchlistId, stockId);
 

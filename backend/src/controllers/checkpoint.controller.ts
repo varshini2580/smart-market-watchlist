@@ -1,20 +1,33 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AuthRequest } from "../middleware/auth.middleware";
 import { checkpointService } from "../services/checkpoint.service";
 
 export const getCheckpoint = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
-    const userId = req.params.userId as string;
-    const symbol = req.params.symbol as string;
-    const exchange = req.query.exchange as string;
+    let userId = req.user?.id;
+    const paramUserId = typeof req.params.userId === "string" ? req.params.userId : undefined;
 
-    if (!userId || !symbol || !exchange) {
+    if (paramUserId) {
+      if (userId && userId !== paramUserId) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden: You cannot access another user's checkpoint",
+        });
+      }
+      userId = userId || paramUserId;
+    }
+
+    const symbol = req.params.symbol as string;
+    const exchange = (req.query.exchange as string) || "NSE";
+
+    if (!userId || !symbol) {
       return res.status(400).json({
         success: false,
         message:
-          "userId, symbol and exchange are required",
+          "Authentication and symbol are required",
       });
     }
 
@@ -43,19 +56,31 @@ export const getCheckpoint = async (
 };
 
 export const updateCheckpoint = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
-    const userId = req.params.userId as string;
-    const symbol = req.params.symbol as string;
-    const exchange = req.query.exchange as string;
+    let userId = req.user?.id;
+    const paramUserId = typeof req.params.userId === "string" ? req.params.userId : undefined;
 
-    if (!userId || !symbol || !exchange) {
+    if (paramUserId) {
+      if (userId && userId !== paramUserId) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden: You cannot update another user's checkpoint",
+        });
+      }
+      userId = userId || paramUserId;
+    }
+
+    const symbol = req.params.symbol as string;
+    const exchange = (req.query.exchange as string) || "NSE";
+
+    if (!userId || !symbol) {
       return res.status(400).json({
         success: false,
         message:
-          "userId, symbol and exchange are required",
+          "Authentication and symbol are required",
       });
     }
 

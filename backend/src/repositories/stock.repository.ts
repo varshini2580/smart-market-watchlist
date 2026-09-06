@@ -35,4 +35,19 @@ export const stockRepository = {
       },
     });
   },
+
+  async findWithPagination(where?: any, skip: number = 0, take: number = 20) {
+    return prisma.stock.findMany({
+      where,
+      orderBy: {
+        symbol: "asc",
+      },
+      skip,
+      take,
+    });
+  },
+
+  async count(where?: any) {
+    return prisma.stock.count({ where });
+  },
 };

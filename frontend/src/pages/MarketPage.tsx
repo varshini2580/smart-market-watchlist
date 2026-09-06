@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-import { API_URL as API, DEFAULT_USER_ID as USER_ID } from "../config";
+import { API_URL as API } from "../config";
 
 interface MarketStatus {
     isOpen: boolean;
@@ -51,8 +51,8 @@ export default function MarketPage() {
             setError(null);
             const [statusRes, dashRes, attnRes] = await Promise.all([
                 axios.get(`${API}/market/status`, { timeout: 6000 }).catch(() => ({ data: null })),
-                axios.get(`${API}/dashboard/${USER_ID}`, { timeout: 6000 }).catch(() => ({ data: { dashboard: null } })),
-                axios.get(`${API}/attention/${USER_ID}`, { timeout: 6000 }).catch(() => ({ data: { events: [] } })),
+                axios.get(`${API}/dashboard`, { timeout: 6000 }).catch(() => ({ data: { dashboard: null } })),
+                axios.get(`${API}/attention`, { timeout: 6000 }).catch(() => ({ data: { events: [] } })),
             ]);
 
             const statusData = statusRes.data;

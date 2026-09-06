@@ -5,6 +5,7 @@ import {
     NavLink,
     Route,
     Routes,
+    useNavigate,
 } from "react-router-dom";
 
 import Dashboard from "./Dashboard";
@@ -15,6 +16,10 @@ import AlertsPage from "./pages/AlertsPage";
 import NewsPage from "./pages/NewsPage";
 import InsightsPage from "./pages/InsightsPage";
 import SettingsPage from "./pages/SettingsPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import AuthCallbackPage from "./pages/AuthCallbackPage";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import "./App.css";
 
 class RouteErrorBoundary extends React.Component<
@@ -60,10 +65,41 @@ class RouteErrorBoundary extends React.Component<
     }
 }
 
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+    const { user, loading } = useAuth();
+
+    if (loading) {
+        return (
+            <div className="auth-viewport">
+                <div className="auth-ambient-glow" />
+                <div className="auth-card" style={{ textAlign: "center", padding: "48px 24px" }}>
+                    <div className="auth-spinner" style={{ width: 36, height: 36, margin: "0 auto 16px" }} />
+                    <p style={{ color: "var(--text-secondary)", fontSize: 14 }}>
+                        Loading your workspace...
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return <>{children}</>;
+}
+
 function AppLayout() {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const closeSidebar = () => setSidebarOpen(false);
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login", { replace: true });
+    };
 
     return (
         <div className="app-shell">
@@ -159,6 +195,27 @@ function AppLayout() {
                 </nav>
 
                 <div className="sidebar-bottom">
+                    {user && (
+                        <div className="sidebar-user-section">
+                            <div className="sidebar-user-info">
+                                <div className="sidebar-user-avatar">
+                                    {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                                </div>
+                                <div className="sidebar-user-meta">
+                                    <span className="sidebar-user-name">{user.name}</span>
+                                    <span className="sidebar-user-email">{user.email}</span>
+                                </div>
+                            </div>
+                            <button
+                                className="sidebar-logout-btn"
+                                onClick={handleLogout}
+                                title="Sign out"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    )}
+
                     <NavLink
                         to="/settings"
                         className={({ isActive }) =>
@@ -185,14 +242,70 @@ function AppLayout() {
                 <RouteErrorBoundary>
                     <Routes>
                         <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/watchlist" element={<WatchlistPage />} />
-                        <Route path="/market" element={<MarketPage />} />
-                        <Route path="/alerts" element={<AlertsPage />} />
-                        <Route path="/news" element={<NewsPage />} />
-                        <Route path="/insights" element={<InsightsPage />} />
-                        <Route path="/settings" element={<SettingsPage />} />
-                        <Route path="/stocks/:symbol" element={<StockDetail />} />
+                        <Route
+                            path="/dashboard"
+                            element={
+                                <ProtectedRoute>
+                                    <Dashboard />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/watchlist"
+                            element={
+                                <ProtectedRoute>
+                                    <WatchlistPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/market"
+                            element={
+                                <ProtectedRoute>
+                                    <MarketPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/alerts"
+                            element={
+                                <ProtectedRoute>
+                                    <AlertsPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/news"
+                            element={
+                                <ProtectedRoute>
+                                    <NewsPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/insights"
+                            element={
+                                <ProtectedRoute>
+                                    <InsightsPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/settings"
+                            element={
+                                <ProtectedRoute>
+                                    <SettingsPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/stocks/:symbol"
+                            element={
+                                <ProtectedRoute>
+                                    <StockDetail />
+                                </ProtectedRoute>
+                            }
+                        />
                         <Route path="*" element={<Navigate to="/dashboard" replace />} />
                     </Routes>
                 </RouteErrorBoundary>
@@ -201,10 +314,43 @@ function AppLayout() {
     );
 }
 
+function AppRoutes() {
+    const { user, loading } = useAuth();
+
+    return (
+        <Routes>
+            <Route
+                path="/login"
+                element={
+                    !loading && user ? (
+                        <Navigate to="/dashboard" replace />
+                    ) : (
+                        <LoginPage />
+                    )
+                }
+            />
+            <Route
+                path="/signup"
+                element={
+                    !loading && user ? (
+                        <Navigate to="/dashboard" replace />
+                    ) : (
+                        <SignupPage />
+                    )
+                }
+            />
+            <Route path="/auth/callback" element={<AuthCallbackPage />} />
+            <Route path="/*" element={<AppLayout />} />
+        </Routes>
+    );
+}
+
 function App() {
     return (
         <BrowserRouter>
-            <AppLayout />
+            <AuthProvider>
+                <AppRoutes />
+            </AuthProvider>
         </BrowserRouter>
     );
 }

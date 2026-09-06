@@ -124,7 +124,11 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  createdAt: 'createdAt'
+  passwordHash: 'passwordHash',
+  googleId: 'googleId',
+  authProvider: 'authProvider',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.WatchlistScalarFieldEnum = {

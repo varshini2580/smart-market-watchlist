@@ -852,6 +852,174 @@ smart-market-watchlist/
 
 ---
 
+# Authentication & Multi-User Architecture
+
+The platform provides secure, personalized user authentication while preserving all existing market monitoring, change-detection, and attention engine logic.
+
+```text
+                                  ┌─────────────────────────────┐
+                                  │      Client (Browser)       │
+                                  └──────────────┬──────────────┘
+                                                 │
+                        ┌────────────────────────┴────────────────────────┐
+                        ▼                                                 ▼
+             [Email + Password Login]                         [Continue with Google]
+                        │                                                 │
+                        ▼                                                 ▼
+             bcrypt Password Compare                           OAuth 2.0 Token Exchange
+                        │                                                 │
+                        └────────────────────────┬────────────────────────┘
+                                                 ▼
+                                     Unified User Record
+                                    (PostgreSQL via Prisma)
+                                                 │
+                                                 ▼
+                                     Signed JWT Token Issued
+                           (HttpOnly Cookie + Bearer Token Fallback)
+                                                 │
+                                                 ▼
+                                   requireAuth Middleware
+                              (Extracts User Identity from JWT)
+                                                 │
+                        ┌────────────────────────┼────────────────────────┐
+                        ▼                        ▼                        ▼
+                 User Watchlist          User Checkpoints          Attention Events
+               (Isolated Data)           (Isolated State)         (Isolated Signals)
+```
+
+### Key Principles
+
+1. **Server-Side Identity Verification**: The backend derives the user ID strictly from the verified JWT payload (`req.user.id`). Client-provided IDs in request bodies or URLs are never trusted for authorization.
+2. **Unified User Model**: Both Email/Password and Google OAuth resolve to the same underlying `User` record in PostgreSQL.
+3. **Session Persistence ("Remember Me")**:
+   - **Default Session**: 24-hour expiration.
+   - **Remember Me Active**: 30-day expiration.
+   - Raw passwords are never stored. Passwords are salted and hashed using bcrypt (`12` rounds).
+4. **Resilient Token Delivery**:
+   - Primary: Secure, `HttpOnly`, `SameSite=None` cookie for protection against XSS.
+   - Secondary: `Authorization: Bearer <token>` fallback header automatically attached by Axios interceptor for cross-origin / third-party cookie restricted environments.
+
+---
+
+# Multi-User Data Isolation & Acceptance Testing
+
+Smart Market Watchlist enforces strict tenant isolation across all layers:
+
+```text
+User A (e.g., userA@example.com)
+ ├── Watchlist A ("My Watchlist" with personalized stocks)
+ ├── Checkpoints A (Private price baselines)
+ └── Attention A (Private change signals)
+
+User B (e.g., userB@example.com)
+ ├── Watchlist B ("My Watchlist" with distinct stocks)
+ ├── Checkpoints B (Private price baselines)
+ └── Attention B (Private change signals)
+```
+
+### Two-User Isolation Acceptance Test
+
+An automated end-to-end multi-user isolation verification suite is included in `backend/test-two-users.ts`. It verifies:
+
+1. **User Registration & Seeding**: Registers User A and User B; verifies automatic default watchlist creation for each user.
+2. **Dashboard Isolation**: User A cannot read User B's dashboard. Legacy routes (`GET /api/dashboard/:userId`) reject unauthorized access with `403 Forbidden`.
+3. **Watchlist Isolation**: User A cannot view, add items to, or delete items from User B's watchlist (`403 Forbidden`).
+4. **Attention Isolation**: User A cannot view User B's attention notifications (`403 Forbidden`).
+5. **Catalog & Pagination**: Global stock catalog supports efficient pagination (`page`, `limit`) and search without leaking user-specific checkpoints.
+
+Run the test suite locally:
+```bash
+cd backend
+npx tsx test-two-users.ts
+```
+
+---
+
+# Pragmatic Scalability Rationale
+
+Smart Market Watchlist is engineered to handle substantial growth using solid database and architectural primitives without unnecessary operational complexity (e.g., no premature Redis/Kafka dependencies):
+
+1. **Connection Pooling**: Uses the Node `pg` Pool adapter with managed connections (`max: 10`, idle timeouts), preventing connection exhaustion on PostgreSQL.
+2. **Comprehensive Indexing**:
+   - `User.email` (Unique index)
+   - `User.googleId` (Unique index)
+   - `Watchlist.userId` (B-tree index for instant watchlist lookups)
+   - `WatchlistItem(watchlistId, stockId)` (Composite unique index)
+   - `MarketSnapshot.stockId` (B-tree index for snapshot freshness queries)
+   - `Checkpoint(userId, stockId)` (Composite index for per-user checkpoint lookups)
+   - `AttentionEvent(userId, detectedAt)` (Composite index for chronological user alerts)
+3. **Shared Market Ingestion**: The background market monitor updates shared `MarketSnapshot` records once per interval across all symbols, ensuring API calls to Yahoo Finance scale with the number of *distinct symbols*, NOT the number of *users*.
+4. **Pagination**: Global endpoints (e.g., `/api/stocks`, `/api/attention`) support `page` and `limit` query parameters with safety caps to prevent memory spikes on large collections.
+5. **Stateless Backend**: Express authentication is stateless (JWT), allowing horizontal autoscaling behind a load balancer without sticky sessions.
+
+---
+
+# Local Setup & Verification
+
+### Prerequisites
+- Node.js 18+
+- PostgreSQL database (local or cloud like Render/Neon/Supabase)
+
+### 1. Backend Setup
+```bash
+cd backend
+
+# Install dependencies
+npm install
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env and supply your DATABASE_URL, JWT_SECRET, etc.
+
+# Run database migrations
+npx prisma migrate deploy
+
+# Seed stock catalog
+npm run seed
+
+# Start development server
+npm run dev
+```
+Backend runs on `http://localhost:5000`.
+
+### 2. Frontend Setup
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start Vite dev server
+npm run dev
+```
+Frontend runs on `http://localhost:5173`.
+
+---
+
+# Production Deployment (Render)
+
+### Backend Web Service (Render)
+1. Create a **Web Service** pointing to the repository root with root directory `backend`.
+2. **Build Command**: `npm install && npm run build && npx prisma migrate deploy`
+3. **Start Command**: `npm start`
+4. **Environment Variables**:
+   - `DATABASE_URL`: PostgreSQL connection string (with `?sslmode=require`).
+   - `NODE_ENV`: `production`
+   - `PORT`: `5000` (or leave default Render port)
+   - `JWT_SECRET`: Secure 64-character random string.
+   - `FRONTEND_URL`: URL of your deployed frontend (e.g., `https://smart-market-watchlist.vercel.app` or Render frontend URL).
+   - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`: (Optional) Credentials from Google Cloud Console.
+   - `GOOGLE_CALLBACK_URL`: `https://<your-backend>.onrender.com/api/auth/google/callback`
+
+### Frontend Static Site (Render / Vercel)
+1. Create a **Static Site** pointing to `frontend`.
+2. **Build Command**: `npm install && npm run build`
+3. **Publish Directory**: `dist`
+4. **Environment Variables**:
+   - `VITE_API_URL`: `https://<your-backend>.onrender.com`
+
+---
+
 # Product Philosophy
 
 Smart Market Watchlist is built around a simple idea:

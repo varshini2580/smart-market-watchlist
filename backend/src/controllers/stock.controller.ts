@@ -70,13 +70,20 @@ export const getStock = async (req: Request, res: Response) => {
   }
 };
 
-export const getStocks = async (_req: Request, res: Response) => {
+export const getStocks = async (req: Request, res: Response) => {
   try {
-    const stocks = await stockService.getStocks();
+    const search = req.query.search as string | undefined;
+    const page = req.query.page ? Number(req.query.page) : undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+
+    const result = await stockService.getStocks(search, page, limit);
 
     return res.status(200).json({
       success: true,
-      stocks,
+      stocks: result.stocks,
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
     });
   } catch (error) {
     console.error(error);

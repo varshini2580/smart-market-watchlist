@@ -1,17 +1,31 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AuthRequest } from "../middleware/auth.middleware";
 import { dashboardService } from "../services/dashboard.service";
 
 export const getDashboard = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
-    const userId = req.params.userId as string;
+    // Prefer authenticated user from session/token
+    let userId = req.user?.id;
+    const paramUserId = typeof req.params.userId === "string" ? req.params.userId : undefined;
+
+    // Validate ownership if client provided a userId parameter
+    if (paramUserId) {
+      if (userId && userId !== paramUserId) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden: You cannot access another user's dashboard",
+        });
+      }
+      userId = userId || paramUserId;
+    }
 
     if (!userId) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
-        message: "userId is required",
+        message: "Authentication required",
       });
     }
 
@@ -47,16 +61,27 @@ export const getDashboard = async (
  * return the updated dashboard. Called by the frontend refresh button.
  */
 export const refreshDashboard = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ) => {
   try {
-    const userId = req.params.userId as string;
+    let userId = req.user?.id;
+    const paramUserId = typeof req.params.userId === "string" ? req.params.userId : undefined;
+
+    if (paramUserId) {
+      if (userId && userId !== paramUserId) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden: You cannot refresh another user's dashboard",
+        });
+      }
+      userId = userId || paramUserId;
+    }
 
     if (!userId) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
-        message: "userId is required",
+        message: "Authentication required",
       });
     }
 

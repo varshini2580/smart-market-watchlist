@@ -37,10 +37,10 @@ function getTimeSince(iso: string) {
 }
 
 const EVENT_ICON: Record<string, string> = {
-    LARGE_PRICE_CHANGE: "📊",
-    TARGET_REACHED: "🎯",
-    PURCHASE_PRICE_CROSSED: "💰",
-    VOLUME_SPIKE: "📈",
+    LARGE_PRICE_CHANGE: "◆",
+    TARGET_REACHED: "◎",
+    PURCHASE_PRICE_CROSSED: "▲",
+    VOLUME_SPIKE: "◈",
 };
 
 const EVENT_LABEL: Record<string, string> = {
@@ -97,7 +97,6 @@ export default function AlertsPage() {
                 });
             }
 
-            // Sort newest first
             parsed.sort(
                 (a, b) => new Date(b.detectedAt).getTime() - new Date(a.detectedAt).getTime()
             );
@@ -151,7 +150,7 @@ export default function AlertsPage() {
         return (
             <div className="page">
                 <div className="error-screen">
-                    <div className="error-icon">⚠️</div>
+                    <div className="error-icon">!</div>
                     <h2>Alerts unavailable</h2>
                     <p>{error}</p>
                     <button className="btn-primary" style={{ marginTop: 16 }} onClick={load}>Retry</button>
@@ -181,14 +180,13 @@ export default function AlertsPage() {
             </div>
 
             <div className="page-body">
-                {/* Filter tabs */}
                 <div className="filter-bar">
                     <div className="filter-tabs">
                         {[
                             { key: "all", label: `All (${events.length})` },
-                            { key: "high", label: `🔴 High (${counts.high})` },
-                            { key: "medium", label: `🟡 Medium (${counts.medium})` },
-                            { key: "low", label: `🔵 Low (${counts.low})` },
+                            { key: "high", label: `High (${counts.high})` },
+                            { key: "medium", label: `Medium (${counts.medium})` },
+                            { key: "low", label: `Low (${counts.low})` },
                             { key: "price", label: "Price Change" },
                             { key: "target", label: "Target" },
                             { key: "volume", label: "Volume" },
@@ -204,10 +202,9 @@ export default function AlertsPage() {
                     </div>
                 </div>
 
-                {/* Alert feed */}
                 {filtered.length === 0 ? (
                     <div className="empty">
-                        <div className="empty-icon">✅</div>
+                        <div className="empty-icon">✓</div>
                         <h3>
                             {filter === "all" ? "Your watchlist is quiet" : `No ${filter} alerts`}
                         </h3>
@@ -221,7 +218,7 @@ export default function AlertsPage() {
                     <div className="attention-list">
                         {filtered.map((evt, idx) => {
                             const isPos = evt.changePercent > 0;
-                            const icon = EVENT_ICON[evt.type] ?? "📌";
+                            const icon = EVENT_ICON[evt.type] ?? "•";
                             const label = EVENT_LABEL[evt.type] ?? evt.type.replace(/_/g, " ");
                             const severityClass =
                                 evt.severity === "HIGH"

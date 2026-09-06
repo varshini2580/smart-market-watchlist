@@ -3,7 +3,6 @@ export interface MarketQuote {
   price: number;
   volume?: number;
 
-  // OHLCV extended fields
   open?: number;
   previousClose?: number;
   dayHigh?: number;

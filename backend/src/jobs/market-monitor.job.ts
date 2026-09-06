@@ -2,11 +2,6 @@ import prisma from "../lib/prisma";
 import { marketService } from "../services/market.service";
 import { changeDetectionService } from "../services/change-detection.service";
 
-/**
- * Background market monitor job.
- * Uses refreshIfStale so it does NOT call the external API
- * if the data was already refreshed within the freshness window.
- */
 export const marketMonitorJob = async () => {
   console.log("[market-monitor] Starting background monitor...");
 
@@ -25,8 +20,6 @@ export const marketMonitorJob = async () => {
       },
     });
 
-    // Deduplicate stocks — only monitor each stock once even if
-    // multiple users watch the same stock (data fetching is stock-level)
     const seenStocks = new Set<string>();
 
     for (const user of users) {
@@ -37,7 +30,6 @@ export const marketMonitorJob = async () => {
             const exchange = item.stock.exchange;
             const stockKey = `${symbol}:${exchange}`;
 
-            // Fetch market data only once per stock (not once per user)
             if (!seenStocks.has(stockKey)) {
               seenStocks.add(stockKey);
               await marketService.refreshIfStale(symbol, exchange);
@@ -46,7 +38,6 @@ export const marketMonitorJob = async () => {
               );
             }
 
-            // Change detection is user-specific, run for each user
             const result = await changeDetectionService.detect(
               user.id,
               symbol,

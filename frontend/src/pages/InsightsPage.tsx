@@ -30,7 +30,6 @@ function formatINR(n: number) {
 }
 
 const CHART_COLORS = {
-
     positive: "#10B981",
     negative: "#EF4444",
     purple: "#8B5CF6",
@@ -155,7 +154,6 @@ export default function InsightsPage() {
         const abovePurchase = withPerf.filter((i) => i.perfPct > 0).length;
         const belowPurchase = withPerf.filter((i) => i.perfPct < 0).length;
 
-        // Chart data
         const perfData = withPerf.map((i) => ({
             symbol: i.stock.symbol,
             pct: parseFloat(i.perfPct.toFixed(2)),
@@ -211,7 +209,7 @@ export default function InsightsPage() {
         return (
             <div className="page">
                 <div className="error-screen">
-                    <div className="error-icon">⚠️</div>
+                    <div className="error-icon">!</div>
                     <h2>Could not load insights</h2>
                     <p>{error}</p>
                     <button className="btn-primary" style={{ marginTop: 16 }} onClick={load}>Retry</button>
@@ -254,13 +252,12 @@ export default function InsightsPage() {
             </div>
 
             <div className="page-body">
-                {/* Metric cards */}
                 <div className="insight-grid">
                     {[
-                        { icon: "📊", label: "Total Tracked", value: insights.total, desc: `${insights.holdings} holding · ${insights.interested} watching` },
-                        { icon: "📈", label: "In Profit", value: insights.abovePurchase, desc: `vs ${insights.belowPurchase} below purchase price` },
-                        { icon: "⚡", label: "Active Alerts", value: attention.length, desc: `${insights.alertCounts.high} high priority` },
-                        { icon: "🎯", label: "With Targets", value: items.filter((i) => i.targetPrice != null).length, desc: "have a target price set" },
+                        { icon: "◈", label: "Total Tracked", value: insights.total, desc: `${insights.holdings} holding · ${insights.interested} watching` },
+                        { icon: "▲", label: "In Profit", value: insights.abovePurchase, desc: `vs ${insights.belowPurchase} below purchase price` },
+                        { icon: "▲", label: "Active Alerts", value: attention.length, desc: `${insights.alertCounts.high} high priority` },
+                        { icon: "◎", label: "With Targets", value: items.filter((i) => i.targetPrice != null).length, desc: "have a target price set" },
                     ].map((c, i) => (
                         <div key={c.label} className="insight-card" style={{ animationDelay: `${i * 0.05}s` }}>
                             <div className="insight-card-icon">{c.icon}</div>
@@ -271,13 +268,12 @@ export default function InsightsPage() {
                     ))}
                 </div>
 
-                {/* Narrative cards */}
                 <div className="section">
                     <div className="section-heading"><h2>Key Findings</h2></div>
                     <div className="skeleton-section" style={{ gap: 10 }}>
                         {insights.best && (
                             <div className="narrative-card">
-                                <span className="narrative-icon">🏆</span>
+                                <span className="narrative-icon">▲</span>
                                 <p className="narrative-text">
                                     <strong>{insights.best.stock.symbol}</strong> is your best performer at{" "}
                                     <strong style={{ color: "var(--positive)" }}>
@@ -289,7 +285,7 @@ export default function InsightsPage() {
                         )}
                         {insights.worst && insights.worst.perfPct < 0 && (
                             <div className="narrative-card" style={{ borderLeftColor: "var(--negative)" }}>
-                                <span className="narrative-icon">📉</span>
+                                <span className="narrative-icon">▼</span>
                                 <p className="narrative-text">
                                     <strong>{insights.worst.stock.symbol}</strong> is down{" "}
                                     <strong style={{ color: "var(--negative)" }}>
@@ -301,7 +297,7 @@ export default function InsightsPage() {
                         )}
                         {insights.closestToTarget && (
                             <div className="narrative-card" style={{ borderLeftColor: "var(--warning)" }}>
-                                <span className="narrative-icon">🎯</span>
+                                <span className="narrative-icon">◎</span>
                                 <p className="narrative-text">
                                     <strong>{insights.closestToTarget.stock.symbol}</strong> is closest to its target price at{" "}
                                     <strong style={{ color: "var(--warning)" }}>
@@ -313,7 +309,7 @@ export default function InsightsPage() {
                         )}
                         {insights.alertCounts.high > 0 && (
                             <div className="narrative-card" style={{ borderLeftColor: "var(--negative)" }}>
-                                <span className="narrative-icon">🔴</span>
+                                <span className="narrative-icon">!</span>
                                 <p className="narrative-text">
                                     You have <strong>{insights.alertCounts.high} high-priority</strong> alert
                                     {insights.alertCounts.high > 1 ? "s" : ""} requiring attention.
@@ -322,7 +318,7 @@ export default function InsightsPage() {
                         )}
                         {insights.abovePurchase > 0 && insights.total > 0 && (
                             <div className="narrative-card">
-                                <span className="narrative-icon">💡</span>
+                                <span className="narrative-icon">◆</span>
                                 <p className="narrative-text">
                                     <strong>{insights.abovePurchase} of {insights.withPerf.length}</strong> tracked stocks are currently above their purchase price.
                                 </p>
@@ -331,7 +327,6 @@ export default function InsightsPage() {
                     </div>
                 </div>
 
-                {/* Performance bar chart */}
                 {insights.perfData.length > 0 && (
                     <div className="chart-container">
                         <h3>Performance vs Purchase Price (%)</h3>
@@ -342,7 +337,6 @@ export default function InsightsPage() {
                                 <YAxis tick={{ fill: "var(--text-muted)", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
                                 <Tooltip
                                     contentStyle={TOOLTIP_STYLE}
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                     formatter={((v: any) => [`${Number(v) > 0 ? "+" : ""}${Number(v).toFixed(2)}%`, "Gain/Loss"]) as any}
                                     cursor={{ fill: "rgba(255,255,255,0.03)" }}
                                 />
@@ -356,7 +350,6 @@ export default function InsightsPage() {
                     </div>
                 )}
 
-                {/* Pie charts */}
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 20 }}>
                     {insights.intentPie.length > 0 && (
                         <div className="chart-container">

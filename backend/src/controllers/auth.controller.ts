@@ -4,12 +4,6 @@ import { AuthRequest } from "../middleware/auth.middleware";
 
 const isProduction = process.env.NODE_ENV === "production";
 
-/**
- * Cookie options helper.
- * - httpOnly: prevents client-side script access
- * - secure: requires HTTPS in production
- * - sameSite: 'none' in production (for cross-origin Render domains), 'lax' in local dev
- */
 const getCookieOptions = (rememberMe: boolean = false) => {
   const maxAge = rememberMe
     ? 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -30,7 +24,6 @@ export const register = async (req: Request, res: Response) => {
 
     const result = await authService.register(name, email, password);
 
-    // Set HttpOnly session cookie
     res.cookie("token", result.token, getCookieOptions(false));
 
     return res.status(201).json({
@@ -56,7 +49,6 @@ export const login = async (req: Request, res: Response) => {
 
     const result = await authService.login(email, password, !!rememberMe);
 
-    // Set HttpOnly session cookie
     res.cookie("token", result.token, getCookieOptions(!!rememberMe));
 
     return res.status(200).json({
@@ -127,10 +119,6 @@ export const logout = async (_req: Request, res: Response) => {
   }
 };
 
-/**
- * Initiates Google OAuth2 redirection.
- * Validates whether environment credentials are provided.
- */
 export const googleAuth = async (_req: Request, res: Response) => {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const callbackUrl =
@@ -159,9 +147,6 @@ export const googleAuth = async (_req: Request, res: Response) => {
   );
 };
 
-/**
- * Handles the Google OAuth2 code exchange callback.
- */
 export const googleCallback = async (req: Request, res: Response) => {
   const code = req.query.code as string;
   const error = req.query.error as string;
@@ -191,7 +176,6 @@ export const googleCallback = async (req: Request, res: Response) => {
   }
 
   try {
-    // 1. Exchange authorization code for tokens
     const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -219,7 +203,6 @@ export const googleCallback = async (req: Request, res: Response) => {
       id_token: string;
     };
 
-    // 2. Fetch user information
     const userinfoResponse = await fetch(
       "https://www.googleapis.com/oauth2/v3/userinfo",
       {
@@ -242,17 +225,14 @@ export const googleCallback = async (req: Request, res: Response) => {
       picture?: string;
     };
 
-    // 3. Link or create user
     const result = await authService.handleGoogleUser({
       sub: profile.sub,
       email: profile.email,
       name: profile.name || profile.email.split("@")[0],
     });
 
-    // 4. Set HttpOnly session cookie
     res.cookie("token", result.token, getCookieOptions(true));
 
-    // 5. Redirect to frontend dashboard (token included in hash/param for fallback)
     return res.redirect(
       `${frontendUrl}/auth/callback?token=${result.token}`
     );

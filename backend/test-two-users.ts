@@ -1,16 +1,3 @@
-/**
- * Smart Market Watchlist - Two-User Isolation Acceptance Test
- * 
- * Verifies that:
- * 1. User A and User B can register independently.
- * 2. User A cannot view User B's dashboard (returns 403 Forbidden).
- * 3. User A cannot view User B's watchlists (/api/watchlists/user/:userId -> returns 403 Forbidden).
- * 4. User A cannot add a stock to User B's watchlist (/api/watchlists/:id/stocks -> returns 403 Forbidden).
- * 5. User A cannot delete items from User B's watchlist (/api/watchlists/items/:id -> returns 403 Forbidden).
- * 6. User A cannot view User B's attention events (/api/attention/:userId -> returns 403 Forbidden).
- * 7. Stock catalog and search work with pagination without leaking user state.
- */
-
 import http from "node:http";
 import app from "./src/app.js";
 import prisma from "./src/lib/prisma.js";
@@ -75,7 +62,6 @@ async function runAcceptanceTest(): Promise<void> {
             password: "Password123!",
         };
 
-        // 1. Register User A
         console.log("\n1. Registering User A...");
         const regARes = await fetch(`${BASE_URL}/auth/register`, {
             method: "POST",
@@ -90,7 +76,6 @@ async function runAcceptanceTest(): Promise<void> {
         const userA = regA.user;
         console.log(`   ✓ User A registered: id=${userA.id}, email=${userA.email}`);
 
-        // 2. Register User B
         console.log("\n2. Registering User B...");
         const regBRes = await fetch(`${BASE_URL}/auth/register`, {
             method: "POST",
@@ -105,7 +90,6 @@ async function runAcceptanceTest(): Promise<void> {
         const userB = regB.user;
         console.log(`   ✓ User B registered: id=${userB.id}, email=${userB.email}`);
 
-        // 3. Verify User A own dashboard
         console.log("\n3. Testing User A access to own dashboard (/api/dashboard)...");
         const dashARes = await fetch(`${BASE_URL}/dashboard`, {
             headers: { Authorization: `Bearer ${tokenA}` },
@@ -116,7 +100,6 @@ async function runAcceptanceTest(): Promise<void> {
         }
         console.log(`   ✓ User A accessed own dashboard. Stock count: ${dashA.dashboard?.stocks?.length || 0}`);
 
-        // 4. Verify User A cannot access User B's dashboard via legacy route
         console.log("\n4. Testing User A unauthorized access to User B's dashboard (/api/dashboard/:userId)...");
         const breachDashRes = await fetch(`${BASE_URL}/dashboard/${userB.id}`, {
             headers: { Authorization: `Bearer ${tokenA}` },
@@ -127,7 +110,6 @@ async function runAcceptanceTest(): Promise<void> {
             throw new Error(`SECURITY BREACH: Expected 403, got ${breachDashRes.status}`);
         }
 
-        // 5. Verify User B watchlists
         console.log("\n5. Fetching User B watchlists (/api/watchlists)...");
         const watchlistsBRes = await fetch(`${BASE_URL}/watchlists`, {
             headers: { Authorization: `Bearer ${tokenB}` },
@@ -139,7 +121,6 @@ async function runAcceptanceTest(): Promise<void> {
         }
         console.log(`   ✓ User B watchlist ID: ${bWatchlist.id}, item count: ${bWatchlist.items?.length || 0}`);
 
-        // 6. Verify User A cannot read User B's watchlists via legacy route
         console.log("\n6. Testing User A reading User B's watchlists (/api/watchlists/user/:userId)...");
         const breachWatchlistRes = await fetch(`${BASE_URL}/watchlists/user/${userB.id}`, {
             headers: { Authorization: `Bearer ${tokenA}` },
@@ -150,7 +131,6 @@ async function runAcceptanceTest(): Promise<void> {
             throw new Error(`SECURITY BREACH: Expected 403, got ${breachWatchlistRes.status}`);
         }
 
-        // 7. Verify User A cannot add stocks to User B's watchlist
         console.log("\n7. Testing User A adding a stock to User B's watchlist (/api/watchlists/:watchlistId/stocks)...");
         const breachAddRes = await fetch(`${BASE_URL}/watchlists/${bWatchlist.id}/stocks`, {
             method: "POST",
@@ -169,7 +149,6 @@ async function runAcceptanceTest(): Promise<void> {
             throw new Error(`SECURITY BREACH: Expected 403, got ${breachAddRes.status}`);
         }
 
-        // 8. Verify User A cannot delete items from User B's watchlist
         const bItem = bWatchlist.items?.[0];
         if (bItem) {
             console.log(`\n8. Testing User A deleting an item from User B's watchlist (/api/watchlists/items/:itemId)...`);
@@ -184,7 +163,6 @@ async function runAcceptanceTest(): Promise<void> {
             }
         }
 
-        // 9. Verify Attention isolation
         console.log("\n9. Testing User A reading User B's attention alerts (/api/attention/:userId)...");
         const breachAttnRes = await fetch(`${BASE_URL}/attention/${userB.id}`, {
             headers: { Authorization: `Bearer ${tokenA}` },
@@ -195,7 +173,6 @@ async function runAcceptanceTest(): Promise<void> {
             throw new Error(`SECURITY BREACH: Expected 403, got ${breachAttnRes.status}`);
         }
 
-        // 10. Verify Stock catalog pagination
         console.log("\n10. Testing Stock Catalog pagination (/api/stocks?page=1&limit=5)...");
         const catalogRes = await fetch(`${BASE_URL}/stocks?page=1&limit=5`, {
             headers: { Authorization: `Bearer ${tokenA}` },
@@ -209,7 +186,7 @@ async function runAcceptanceTest(): Promise<void> {
 
         console.log("\n=======================================================");
         console.log("  ALL ACCEPTANCE CRITERIA PASSED SUCCESSFULLY! [PASS]");
-        console.log("=======================================================\n");
+        console.log("=======================================================");
     } finally {
         server.close();
         await prisma.$disconnect();
@@ -219,6 +196,6 @@ async function runAcceptanceTest(): Promise<void> {
 runAcceptanceTest()
     .then(() => process.exit(0))
     .catch((err) => {
-        console.error("\n❌ Acceptance test failed:", err);
+        console.error("\n[FAIL] Acceptance test failed:", err);
         process.exit(1);
     });

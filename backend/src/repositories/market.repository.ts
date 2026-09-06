@@ -33,10 +33,6 @@ export const marketRepository = {
     });
   },
 
-  /**
-   * Returns true when the latest snapshot's fetchedAt
-   * is within the configured freshness window.
-   */
   async isSnapshotFresh(stockId: string): Promise<boolean> {
     const latest = await prisma.marketSnapshot.findFirst({
       where: { stockId },

@@ -6,7 +6,6 @@ import "./App.css";
 
 import { API_BASE as API_URL } from "./config";
 
-// ── Types ────────────────────────────────────────────────────────────
 type Stock = {
   watchlistItemId: string;
   watchlistId: string;
@@ -66,7 +65,6 @@ type Toast = {
   message: string;
 };
 
-// ── Helpers ──────────────────────────────────────────────────────────
 
 function fmt(price: string | number | null) {
   if (price === null || price === undefined) return "—";
@@ -101,18 +99,15 @@ function getGreeting() {
 
 function isMarketHours(): boolean {
   const now = new Date();
-  const day = now.getDay(); // 0=Sun, 6=Sat
+  const day = now.getDay(); 
   if (day === 0 || day === 6) return false;
   const hour = now.getHours();
   const min = now.getMinutes();
   const mins = hour * 60 + min;
-  // NSE: 9:15 AM – 3:30 PM IST
   return mins >= 555 && mins <= 930;
 }
 
-/**
- * Human-readable attention description.
- */
+
 function attentionDescription(event: AttentionEvent): string {
   const pct = event.changePercent
     ? `${Math.abs(Number(event.changePercent)).toFixed(2)}%`
@@ -142,13 +137,13 @@ function attentionDescription(event: AttentionEvent): string {
 function attentionIcon(type: AttentionEvent["type"]): string {
   switch (type) {
     case "TARGET_REACHED":
-      return "🎯";
+      return "◎";
     case "PURCHASE_PRICE_CROSSED":
-      return "⚠️";
+      return "▲";
     case "LARGE_PRICE_CHANGE":
-      return "📈";
+      return "◆";
     case "VOLUME_SPIKE":
-      return "🔊";
+      return "◈";
     default:
       return "!";
   }
@@ -169,7 +164,6 @@ function attentionTypeLabel(type: AttentionEvent["type"]): string {
   }
 }
 
-// ── Component ─────────────────────────────────────────────────────────
 
 function Dashboard() {
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
@@ -180,7 +174,6 @@ function Dashboard() {
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  // Add stock modal
   const [showAddStock, setShowAddStock] = useState(false);
   const [selectedStock, setSelectedStock] = useState<AvailableStock | null>(null);
   const [search, setSearch] = useState("");
@@ -190,13 +183,11 @@ function Dashboard() {
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState("");
 
-  // Remove confirmation modal
   const [removeTarget, setRemoveTarget] = useState<Stock | null>(null);
   const [removing, setRemoving] = useState(false);
 
   const lastRefreshAttempt = useRef<number>(0);
 
-  // ── Toast helpers ─────────────────────────────────────────────────
   const addToast = useCallback(
     (type: "success" | "error", message: string) => {
       const id = Date.now().toString();
@@ -209,7 +200,6 @@ function Dashboard() {
     []
   );
 
-  // ── Data fetching ─────────────────────────────────────────────────
   const fetchDashboard = useCallback(async (retryCount = 0) => {
     try {
       const res = await axios.get(
@@ -246,18 +236,13 @@ function Dashboard() {
       const res = await axios.get(`${API_URL}/api/stocks`, { timeout: 8000 });
       setAvailableStocks(res.data.stocks || []);
     } catch {
-      // Non-critical — modal will show empty search
     }
   }, []);
 
-  /**
-   * On-demand refresh: only fetches stale market data,
-   * runs change detection, updates dashboard.
-   */
+  
   const handleRefresh = useCallback(async () => {
     if (refreshing) return;
 
-    // Debounce: don't refresh within 15s of last attempt
     const now = Date.now();
     if (now - lastRefreshAttempt.current < 15_000) return;
     lastRefreshAttempt.current = now;
@@ -291,12 +276,10 @@ function Dashboard() {
     }
   }, [refreshing, addToast]);
 
-  // Initial load + tab visibility refresh
   useEffect(() => {
     fetchDashboard();
     fetchStocks();
 
-    // Trigger a refresh after the initial load completes
     const timer = setTimeout(() => {
       handleRefresh();
     }, 800);
@@ -312,10 +295,8 @@ function Dashboard() {
       clearTimeout(timer);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Add stock ─────────────────────────────────────────────────────
   const openAddStock = () => {
     setShowAddStock(true);
     setSelectedStock(null);
@@ -396,7 +377,6 @@ function Dashboard() {
     }
   };
 
-  // ── Remove stock ──────────────────────────────────────────────────
   const handleRemoveConfirm = async () => {
     if (!removeTarget) return;
     setRemoving(true);
@@ -435,12 +415,10 @@ function Dashboard() {
     );
   });
 
-  // ── Stock card price delta ────────────────────────────────────────
   function getPriceDelta(stock: Stock) {
     if (!stock.currentPrice) return null;
     const cur = Number(stock.currentPrice);
 
-    // Compare to purchase price if HOLDING, else no delta
     if (stock.purchasePrice) {
       const pur = Number(stock.purchasePrice);
       const delta = cur - pur;
@@ -460,7 +438,6 @@ function Dashboard() {
     return "stable";
   }
 
-  // ── Rendering ─────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="page">
@@ -490,7 +467,7 @@ function Dashboard() {
   if (error && !dashboard) {
     return (
       <div className="error-screen">
-        <div className="error-icon">⚡</div>
+        <div className="error-icon">!</div>
         <h2>Connection Error</h2>
         <p>{error}</p>
         <button className="btn-primary" onClick={() => fetchDashboard(0)}>
@@ -504,7 +481,7 @@ function Dashboard() {
 
   return (
     <div className="page">
-      {/* ── Toast Notifications ── */}
+      
       <div className="toast-container" aria-live="polite">
         {toasts.map((t) => (
           <div key={t.id} className={`toast toast-${t.type}`}>
@@ -516,7 +493,7 @@ function Dashboard() {
         ))}
       </div>
 
-      {/* ── Topbar ── */}
+      
       <div className="page-topbar">
         <div className="page-topbar-left">
           <p className="eyebrow">PORTFOLIO INTELLIGENCE</p>
@@ -551,12 +528,12 @@ function Dashboard() {
       </div>
 
       <main className="page-body">
-        {/* ── Hero ── */}
+        
         <section className="hero">
           <div className="hero-content">
             <p className="eyebrow">MARKET OVERVIEW</p>
             <h2>
-              {getGreeting()}, {dashboard.user.name.split(" ")[0]} 👋
+              {getGreeting()}, {dashboard.user.name.split(" ")[0]}
             </h2>
             <p className="hero-sub">
               {dashboard.summary.attentionCount > 0
@@ -572,7 +549,7 @@ function Dashboard() {
             )}
           </div>
 
-          {/* Market status indicator */}
+          
           <div className="hero-stats">
             <div className="hero-stat">
               <span className="hero-stat-val">
@@ -601,10 +578,10 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* ── Summary Cards ── */}
+        
         <section className="summary-grid" aria-label="Summary">
           <div className="summary-card">
-            <span className="summary-icon">📊</span>
+            <span className="summary-icon">◈</span>
             <span className="summary-label">Total Stocks</span>
             <strong className="summary-value">
               {dashboard.summary.totalStocks}
@@ -612,7 +589,7 @@ function Dashboard() {
           </div>
 
           <div className="summary-card attention-card">
-            <span className="summary-icon">🔔</span>
+            <span className="summary-icon">▲</span>
             <span className="summary-label">Attention Required</span>
             <strong className="summary-value">
               {dashboard.summary.attentionCount}
@@ -620,7 +597,7 @@ function Dashboard() {
           </div>
 
           <div className="summary-card danger-card">
-            <span className="summary-icon">⚡</span>
+            <span className="summary-icon">▲</span>
             <span className="summary-label">High Priority</span>
             <strong className="summary-value">
               {dashboard.summary.highPriority}
@@ -628,7 +605,7 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* ── Watchlist ── */}
+        
         <section className="section" aria-label="My Stocks">
           <div className="section-heading">
             <div>
@@ -653,7 +630,7 @@ function Dashboard() {
 
           {dashboard.stocks.length === 0 ? (
             <div className="empty">
-              <div className="empty-icon">📋</div>
+              <div className="empty-icon">◈</div>
               <h3>Your watchlist is empty</h3>
               <p>Add stocks to start tracking the market.</p>
               <button
@@ -678,7 +655,7 @@ function Dashboard() {
                     key={stock.watchlistItemId}
                     aria-label={`${stock.symbol} stock card`}
                   >
-                    {/* ── Card Header ── */}
+                    
                     <div className="stock-top">
                       <div className="stock-identity">
                         <div className="stock-symbol-row">
@@ -704,7 +681,7 @@ function Dashboard() {
                       </button>
                     </div>
 
-                    {/* ── Price Block ── */}
+                    
                     <div className="stock-price-block">
                       <div className="price-main">
                         <span className="price-label">Current Price</span>
@@ -740,14 +717,14 @@ function Dashboard() {
                       )}
                     </div>
 
-                    {/* ── Details ── */}
+                    
                     <div className="stock-details">
                       <div className="stock-detail-item">
                         <span className="detail-label">Intent</span>
                         <span
                           className={`intent-badge intent-${stock.intent.toLowerCase()}`}
                         >
-                          {stock.intent === "HOLDING" ? "📦 Holding" : "👁 Interested"}
+                          {stock.intent === "HOLDING" ? "Holding" : "Interested"}
                         </span>
                       </div>
 
@@ -770,7 +747,7 @@ function Dashboard() {
                       )}
                     </div>
 
-                    {/* ── Footer ── */}
+                    
                     <div className="stock-footer">
                       <span className="stock-updated">
                         {stock.fetchedAt
@@ -793,7 +770,7 @@ function Dashboard() {
           )}
         </section>
 
-        {/* ── Smart Attention ── */}
+        
         <section className="section" aria-label="Smart Attention">
           <div className="section-heading">
             <div>
@@ -824,13 +801,13 @@ function Dashboard() {
                     key={event.id}
                     aria-label={`Attention event for ${event.symbol}`}
                   >
-                    {/* Severity strip */}
+                    
                     <div
                       className={`attention-strip severity-strip-${event.severity.toLowerCase()}`}
                     />
 
                     <div className="attention-body">
-                      {/* Header row */}
+                      
                       <div className="attention-header">
                         <div className="attention-stock">
                           <span className="attention-event-icon">
@@ -858,12 +835,12 @@ function Dashboard() {
                         </div>
                       </div>
 
-                      {/* Description */}
+                      
                       <p className="attention-description">
                         {attentionDescription(event)}
                       </p>
 
-                      {/* Price journey */}
+                      
                       <div className="attention-prices">
                         <div className="price-journey">
                           <span className="journey-price">
@@ -905,7 +882,7 @@ function Dashboard() {
         )}
       </footer>
 
-      {/* ── Add Stock Modal ── */}
+      
       {showAddStock && (
         <div
           className="modal-overlay"
@@ -1029,7 +1006,7 @@ function Dashboard() {
                       onClick={() => setIntent("HOLDING")}
                       aria-pressed={intent === "HOLDING"}
                     >
-                      <strong>📦 Holding</strong>
+                      <strong>Holding</strong>
                       <span>I already own this stock</span>
                     </button>
                     <button
@@ -1038,7 +1015,7 @@ function Dashboard() {
                       onClick={() => setIntent("INTERESTED")}
                       aria-pressed={intent === "INTERESTED"}
                     >
-                      <strong>👁 Interested</strong>
+                      <strong>Interested</strong>
                       <span>I am watching this stock</span>
                     </button>
                   </div>
@@ -1106,7 +1083,7 @@ function Dashboard() {
         </div>
       )}
 
-      {/* ── Remove Confirmation Modal ── */}
+      
       {removeTarget && (
         <div
           className="modal-overlay"
@@ -1120,7 +1097,7 @@ function Dashboard() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="confirm-icon" aria-hidden="true">
-              🗑️
+              ✕
             </div>
             <h2>Remove {removeTarget.symbol}?</h2>
             <p className="confirm-desc">

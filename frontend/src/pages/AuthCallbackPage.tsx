@@ -23,7 +23,6 @@ export default function AuthCallbackPage() {
         navigate("/dashboard", { replace: true });
       });
     } else {
-      // Check if session cookie was set
       checkAuth().then(() => {
         navigate("/dashboard", { replace: true });
       }).catch(() => {

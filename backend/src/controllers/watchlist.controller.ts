@@ -96,7 +96,6 @@ export const addStock = async (
       targetPrice,
     } = req.body;
 
-    // Validate watchlist ownership if authenticated
     if (req.user) {
       const watchlist = await watchlistRepository.findById(watchlistId);
       if (!watchlist) {
@@ -138,10 +137,6 @@ export const addStock = async (
   }
 };
 
-/**
- * Remove a watchlist item by its own ID.
- * Expects: DELETE /api/watchlists/items/:itemId
- */
 export const removeStockByItemId = async (
   req: AuthRequest,
   res: Response
@@ -180,7 +175,6 @@ export const removeStockByItemId = async (
   }
 };
 
-/** Legacy controller kept for backward compat */
 export const removeStock = async (
   req: AuthRequest,
   res: Response

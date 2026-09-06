@@ -21,7 +21,7 @@ function loadSettings(): Settings {
     try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
-    } catch { /* ignore */ }
+    } catch {}
     return { ...DEFAULT_SETTINGS };
 }
 
@@ -42,7 +42,6 @@ export default function SettingsPage() {
         setTimeout(() => setSaved(false), 1800);
     };
 
-    // Apply animation setting globally
     useEffect(() => {
         if (!settings.animationsEnabled) {
             document.documentElement.style.setProperty("--t-base", "0ms");
@@ -81,11 +80,10 @@ export default function SettingsPage() {
 
             <div className="page-body">
                 <div className="settings-grid">
-                    {/* Account & Profile */}
                     {user && (
                         <div className="settings-section" style={{ animationDelay: "0.02s" }}>
                             <div className="settings-section-header">
-                                <h3>👤 Account & Session</h3>
+                                <h3>Account & Session</h3>
                                 <p>Authenticated user profile and credentials</p>
                             </div>
                             <div className="settings-row">
@@ -150,10 +148,9 @@ export default function SettingsPage() {
                         </div>
                     )}
 
-                    {/* Appearance */}
                     <div className="settings-section" style={{ animationDelay: "0.04s" }}>
                         <div className="settings-section-header">
-                            <h3>🎨 Appearance</h3>
+                            <h3>Appearance</h3>
                             <p>Visual theme and display preferences</p>
                         </div>
                         <div className="settings-row">
@@ -190,10 +187,9 @@ export default function SettingsPage() {
                         </div>
                     </div>
 
-                    {/* Animations */}
                     <div className="settings-section" style={{ animationDelay: "0.08s" }}>
                         <div className="settings-section-header">
-                            <h3>✨ Animations</h3>
+                            <h3>Animations</h3>
                             <p>Motion and transition preferences</p>
                         </div>
                         <div className="settings-row">
@@ -213,10 +209,9 @@ export default function SettingsPage() {
                         </div>
                     </div>
 
-                    {/* Watchlist defaults */}
                     <div className="settings-section" style={{ animationDelay: "0.12s" }}>
                         <div className="settings-section-header">
-                            <h3>☆ Watchlist Defaults</h3>
+                            <h3>Watchlist Defaults</h3>
                             <p>Default view options when opening your watchlist</p>
                         </div>
                         <div className="settings-row">
@@ -251,10 +246,9 @@ export default function SettingsPage() {
                         </div>
                     </div>
 
-                    {/* About */}
                     <div className="settings-section" style={{ animationDelay: "0.16s" }}>
                         <div className="settings-section-header">
-                            <h3>ℹ️ About</h3>
+                            <h3>About</h3>
                             <p>Application information</p>
                         </div>
                         {[
@@ -276,10 +270,9 @@ export default function SettingsPage() {
                         ))}
                     </div>
 
-                    {/* Reset */}
                     <div className="settings-section" style={{ animationDelay: "0.20s" }}>
                         <div className="settings-section-header">
-                            <h3>🔄 Reset</h3>
+                            <h3>Reset</h3>
                             <p>Restore default preferences</p>
                         </div>
                         <div className="settings-row">

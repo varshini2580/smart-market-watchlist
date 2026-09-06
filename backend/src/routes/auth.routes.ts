@@ -16,7 +16,6 @@ router.post("/login", login);
 router.get("/me", requireAuth, getMe);
 router.post("/logout", logout);
 
-// Google OAuth routes
 router.get("/google", googleAuth);
 router.get("/google/callback", googleCallback);
 

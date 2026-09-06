@@ -44,7 +44,7 @@ class RouteErrorBoundary extends React.Component<
             return (
                 <div className="error-screen" style={{ minHeight: "60vh" }}>
                     <div className="error-card">
-                        <div className="error-icon">⚠️</div>
+                        <div className="error-icon">!</div>
                         <h2>Page Error</h2>
                         <p>An unexpected error occurred while loading this view.</p>
                         <button
@@ -103,7 +103,6 @@ function AppLayout() {
 
     return (
         <div className="app-shell">
-            {/* Mobile toggle */}
             <button
                 className="sidebar-toggle"
                 onClick={() => setSidebarOpen((o) => !o)}
@@ -112,13 +111,11 @@ function AppLayout() {
                 {sidebarOpen ? "✕" : "☰"}
             </button>
 
-            {/* Overlay (mobile) */}
             <div
                 className={`sidebar-overlay ${sidebarOpen ? "visible" : ""}`}
                 onClick={closeSidebar}
             />
 
-            {/* Sidebar */}
             <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
                 <div className="sidebar-brand">
                     <div className="brand-mark">◈</div>
@@ -167,7 +164,7 @@ function AppLayout() {
                             `nav-item ${isActive ? "active" : ""}`
                         }
                     >
-                        <span className="nav-icon">⚡</span>
+                        <span className="nav-icon">▲</span>
                         <span>Alerts</span>
                     </NavLink>
 
@@ -223,7 +220,7 @@ function AppLayout() {
                         }
                         onClick={closeSidebar}
                     >
-                        <span className="nav-icon">⚙</span>
+                        <span className="nav-icon">⊙</span>
                         <span>Settings</span>
                     </NavLink>
 
@@ -237,7 +234,6 @@ function AppLayout() {
                 </div>
             </aside>
 
-            {/* Main content */}
             <div className="app-content">
                 <RouteErrorBoundary>
                     <Routes>

@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
 
-
 const JWT_SECRET =
   process.env.JWT_SECRET || "smw-jwt-secret-dev-key-change-in-production";
 
@@ -13,10 +12,7 @@ export interface TokenPayload {
 }
 
 export const authService = {
-  /**
-   * Generates a signed JWT for the user.
-   * If rememberMe is true, session duration is 30 days; otherwise 1 day.
-   */
+
   generateToken(user: TokenPayload, rememberMe: boolean = false): string {
     const expiresIn = rememberMe ? "30d" : "1d";
     return jwt.sign(
@@ -30,10 +26,6 @@ export const authService = {
     );
   },
 
-  /**
-   * Registers a new user with name, email, and password.
-   * Creates an empty default "My Watchlist" — the user must add stocks manually.
-   */
   async register(name: string, email: string, password: string) {
     const cleanName = name?.trim();
     const cleanEmail = email?.toLowerCase().trim();
@@ -50,7 +42,6 @@ export const authService = {
       throw new Error("Password must be at least 6 characters long");
     }
 
-    // Check if user already exists
     const existing = await prisma.user.findUnique({
       where: { email: cleanEmail },
     });
@@ -59,10 +50,8 @@ export const authService = {
       throw new Error("An account with this email already exists");
     }
 
-    // Hash password with bcrypt
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Create user
     const user = await prisma.user.create({
       data: {
         name: cleanName,
@@ -72,7 +61,6 @@ export const authService = {
       },
     });
 
-    // Create an empty default watchlist — user adds their own stocks
     await prisma.watchlist.create({
       data: {
         userId: user.id,
@@ -97,10 +85,6 @@ export const authService = {
     };
   },
 
-  /**
-   * Authenticates user via email + password.
-   * Supports 'rememberMe' to adjust session length.
-   */
   async login(email: string, password: string, rememberMe: boolean = false) {
     const cleanEmail = email?.toLowerCase().trim();
 
@@ -117,7 +101,6 @@ export const authService = {
     }
 
     if (!user.passwordHash) {
-      // User registered via Google OAuth without password
       throw new Error(
         "This account was registered using Google. Please continue with Google."
       );
@@ -145,9 +128,6 @@ export const authService = {
     };
   },
 
-  /**
-   * Retrieves sanitized user details by ID.
-   */
   async getUserById(id: string) {
     const user = await prisma.user.findUnique({
       where: { id },
@@ -164,10 +144,6 @@ export const authService = {
     return user;
   },
 
-  /**
-   * Finds or creates a user from verified Google OAuth credentials.
-   * Links to existing account if email matches.
-   */
   async handleGoogleUser(profile: {
     sub: string;
     email: string;
@@ -175,7 +151,6 @@ export const authService = {
   }) {
     const cleanEmail = profile.email.toLowerCase().trim();
 
-    // 1. Find by googleId or email
     let user = await prisma.user.findFirst({
       where: {
         OR: [{ googleId: profile.sub }, { email: cleanEmail }],
@@ -183,7 +158,6 @@ export const authService = {
     });
 
     if (user) {
-      // If user exists without googleId, link it
       if (!user.googleId) {
         user = await prisma.user.update({
           where: { id: user.id },
@@ -191,7 +165,6 @@ export const authService = {
         });
       }
     } else {
-      // Create new user
       user = await prisma.user.create({
         data: {
           name: profile.name || cleanEmail.split("@")[0],
@@ -201,7 +174,6 @@ export const authService = {
         },
       });
 
-      // Create an empty default watchlist — user adds their own stocks
       await prisma.watchlist.create({
         data: {
           userId: user.id,

@@ -5,7 +5,6 @@ import NodeCache from "node-cache";
 
 const NEWS_API_KEY = process.env.NEWS_API_KEY;
 
-// Cache news results for 10 minutes to deliver instant sub-millisecond responses
 const newsCache = new NodeCache({ stdTTL: 600, checkperiod: 120 });
 
 const yahooFinance = new YahooFinance({
@@ -45,7 +44,6 @@ function fetchJson<T>(url: string): Promise<T> {
   });
 }
 
-// Live Yahoo Finance news fallback for Indian markets & stocks
 async function getYahooFinanceNews(query?: string) {
   try {
     let tickers = ["^NSEI", "RELIANCE.NS", "HDFCBANK.NS"];
@@ -125,7 +123,6 @@ export async function getNews(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  // 1. If GNews API key is configured, try it
   if (NEWS_API_KEY) {
     try {
       const encoded = encodeURIComponent(q);
@@ -156,7 +153,6 @@ export async function getNews(req: Request, res: Response): Promise<void> {
     }
   }
 
-  // 2. Real Yahoo Finance market news
   try {
     const yahooArticles = await getYahooFinanceNews(q);
     const responseData = {

@@ -35,9 +35,6 @@ interface AttentionEvent {
     stock: { symbol: string; name: string };
 }
 
-
-
-
 export default function MarketPage() {
     const [marketStatus, setMarketStatus] = useState<MarketStatus | null>(null);
     const [items, setItems] = useState<WatchlistItem[]>([]);
@@ -132,7 +129,6 @@ export default function MarketPage() {
 
     useEffect(() => { load(); }, []);
 
-    // Derive movers from watchlist items with snapshots
     const movers = useMemo(() => {
         return items
             .filter((i) => i.snapshot?.price != null && i.purchasePrice != null)
@@ -189,7 +185,7 @@ export default function MarketPage() {
         return (
             <div className="page">
                 <div className="error-screen">
-                    <div className="error-icon">⚠️</div>
+                    <div className="error-icon">!</div>
                     <h2>Market data unavailable</h2>
                     <p>{error}</p>
                     <button className="btn-primary" style={{ marginTop: 16 }} onClick={load}>Retry</button>
@@ -212,7 +208,6 @@ export default function MarketPage() {
             </div>
 
             <div className="page-body">
-                {/* Market Status Banner */}
                 <div className={`market-status-banner ${statusClass}`}>
                     <div className="market-status-left">
                         <div className="market-status-dot" />
@@ -229,13 +224,12 @@ export default function MarketPage() {
                     </div>
                 </div>
 
-                {/* Summary metrics */}
                 <div className="metric-grid">
                     {[
-                        { label: "Tracked Stocks", value: items.length, icon: "📊" },
-                        { label: "Gainers", value: gainers.length, icon: "📈" },
-                        { label: "Losers", value: losers.length, icon: "📉" },
-                        { label: "High Alerts", value: highAlerts.length, icon: "🔴" },
+                        { label: "Tracked Stocks", value: items.length, icon: "◈" },
+                        { label: "Gainers", value: gainers.length, icon: "▲" },
+                        { label: "Losers", value: losers.length, icon: "▼" },
+                        { label: "High Alerts", value: highAlerts.length, icon: "!" },
                     ].map((m, i) => (
                         <div
                             key={m.label}
@@ -249,11 +243,10 @@ export default function MarketPage() {
                     ))}
                 </div>
 
-                {/* Gainers */}
                 {gainers.length > 0 && (
                     <div className="section">
                         <div className="section-heading">
-                            <h2>📈 Top Performers</h2>
+                            <h2>Top Performers</h2>
                             <span className="count">{gainers.length} stocks</span>
                         </div>
                         <div className="stock-grid">
@@ -264,11 +257,10 @@ export default function MarketPage() {
                     </div>
                 )}
 
-                {/* Losers */}
                 {losers.length > 0 && (
                     <div className="section">
                         <div className="section-heading">
-                            <h2>📉 Underperformers</h2>
+                            <h2>Underperformers</h2>
                             <span className="count">{losers.length} stocks</span>
                         </div>
                         <div className="stock-grid">
@@ -279,11 +271,10 @@ export default function MarketPage() {
                     </div>
                 )}
 
-                {/* High-priority alerts summary */}
                 {highAlerts.length > 0 && (
                     <div className="section">
                         <div className="section-heading">
-                            <h2>🔴 Attention Required</h2>
+                            <h2>Attention Required</h2>
                             <Link to="/alerts" className="view-btn">View all alerts →</Link>
                         </div>
                         <div className="attention-list">
@@ -293,7 +284,7 @@ export default function MarketPage() {
                                     <div className="attention-body">
                                         <div className="attention-header">
                                             <div className="attention-stock">
-                                                <div className="attention-event-icon">⚡</div>
+                                                <div className="attention-event-icon">▲</div>
                                                 <div>
                                                     <span className="attention-symbol">{a.stock.symbol}</span>
                                                     <span className="attention-name">{a.stock.name}</span>
@@ -312,10 +303,9 @@ export default function MarketPage() {
                     </div>
                 )}
 
-                {/* Empty state if no watchlist data */}
                 {items.length === 0 && (
                     <div className="empty">
-                        <div className="empty-icon">📊</div>
+                        <div className="empty-icon">◈</div>
                         <h3>No market data yet</h3>
                         <p>Add stocks to your watchlist to see market movers.</p>
                         <Link to="/watchlist" className="btn-primary" style={{ marginTop: 16, display: "inline-flex" }}>

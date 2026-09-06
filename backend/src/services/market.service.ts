@@ -37,10 +37,6 @@ export const marketService = {
     );
   },
 
-  /**
-   * Fetches a new quote only when the stored data is stale.
-   * If fresh, returns the cached snapshot without an external call.
-   */
   async refreshIfStale(
     symbol: string,
     exchange: string
@@ -97,10 +93,6 @@ export const marketService = {
     );
   },
 
-  /**
-   * Fetch historical price data directly
-   * from the configured market-data provider.
-   */
   async getHistoricalPrices(
     symbol: string,
     exchange: string,
@@ -113,9 +105,6 @@ export const marketService = {
     );
   },
 
-  /**
-   * Get the current market status.
-   */
   async getMarketStatus() {
     return marketProvider.getMarketStatus();
   },

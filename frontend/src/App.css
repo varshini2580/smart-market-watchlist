@@ -1,20 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-/* =====================================================
-   SMART MARKET WATCHLIST — Dark Purple Premium Theme
-   ===================================================== */
-
 :root {
   --font: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  /* Backgrounds */
   --bg:             #07070D;
   --surface:        #0D0D1A;
   --surface-raised: #111120;
   --surface-high:   #16162A;
   --surface-hover:  #1C1C2E;
 
-  /* Purple palette */
   --purple:         #7C3AED;
   --purple-bright:  #8B5CF6;
   --purple-light:   #A78BFA;
@@ -22,17 +16,14 @@
   --purple-glow:    rgba(124, 58, 237, 0.35);
   --purple-border:  rgba(139, 92, 246, 0.28);
 
-  /* Borders */
   --border:         rgba(255, 255, 255, 0.055);
   --border-med:     rgba(255, 255, 255, 0.10);
   --border-strong:  rgba(255, 255, 255, 0.16);
 
-  /* Text */
   --text:           #F2F2F7;
   --text-secondary: #8E8EA0;
   --text-muted:     #55556A;
 
-  /* Semantic */
   --positive:        #10B981;
   --positive-dim:    rgba(16, 185, 129, 0.12);
   --positive-border: rgba(16, 185, 129, 0.28);
@@ -43,10 +34,8 @@
   --warning-dim:     rgba(245, 158, 11, 0.12);
   --warning-border:  rgba(245, 158, 11, 0.28);
 
-  /* Layout */
   --sidebar-width: 240px;
 
-  /* Radii */
   --r-xs:  4px;
   --r-sm:  8px;
   --r-md:  12px;
@@ -54,23 +43,17 @@
   --r-xl:  20px;
   --r-2xl: 28px;
 
-  /* Shadows */
   --shadow-sm:     0 2px 10px rgba(0, 0, 0, 0.5);
   --shadow-md:     0 4px 24px rgba(0, 0, 0, 0.6);
   --shadow-lg:     0 8px 48px rgba(0, 0, 0, 0.7);
   --shadow-purple: 0 4px 24px rgba(124, 58, 237, 0.3);
   --shadow-modal:  0 24px 80px rgba(0, 0, 0, 0.85);
 
-  /* Transitions */
   --t-fast:   0.12s ease;
   --t-base:   0.18s ease;
   --t-slow:   0.30s ease;
   --t-bounce: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
-/* =====================================================
-   ANIMATIONS
-   ===================================================== */
 
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -125,10 +108,6 @@
   }
 }
 
-/* =====================================================
-   RESET
-   ===================================================== */
-
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
@@ -147,17 +126,11 @@ button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: 0.6; }
 a { color: inherit; text-decoration: none; }
 
-/* =====================================================
-   APP SHELL
-   ===================================================== */
-
 .app-shell {
   display: flex;
   min-height: 100vh;
   background: var(--bg);
 }
-
-/* ── Sidebar ── */
 
 .sidebar {
   width: var(--sidebar-width);
@@ -309,7 +282,6 @@ a { color: inherit; text-decoration: none; }
   animation: pulse 2.5s ease-in-out infinite;
 }
 
-/* Mobile sidebar toggle */
 .sidebar-toggle {
   display: none;
   position: fixed;
@@ -339,7 +311,6 @@ a { color: inherit; text-decoration: none; }
   animation: fadeIn 0.15s ease;
 }
 
-/* Main content */
 .app-content {
   flex: 1;
   margin-left: var(--sidebar-width);
@@ -347,10 +318,6 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   flex-direction: column;
 }
-
-/* =====================================================
-   SHARED PAGE STRUCTURE
-   ===================================================== */
 
 .page {
   flex: 1;
@@ -426,10 +393,6 @@ a { color: inherit; text-decoration: none; }
   display: block;
 }
 
-/* =====================================================
-   BUTTONS
-   ===================================================== */
-
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -502,10 +465,6 @@ a { color: inherit; text-decoration: none; }
   animation: spin 0.65s linear infinite;
 }
 
-/* =====================================================
-   TOAST NOTIFICATIONS
-   ===================================================== */
-
 .toast-container {
   position: fixed;
   bottom: 24px;
@@ -548,10 +507,6 @@ a { color: inherit; text-decoration: none; }
 .toast-success .toast-icon { color: var(--positive); }
 .toast-error  .toast-icon  { color: var(--negative); }
 
-/* =====================================================
-   SECTION / LAYOUT
-   ===================================================== */
-
 .section {
   margin-bottom: 40px;
   animation: slideUp 0.25s ease;
@@ -589,10 +544,6 @@ a { color: inherit; text-decoration: none; }
   gap: 12px;
 }
 
-/* =====================================================
-   DASHBOARD
-   ===================================================== */
-
 .app {
   flex: 1;
   display: flex;
@@ -600,7 +551,6 @@ a { color: inherit; text-decoration: none; }
   animation: fadeIn 0.2s ease;
 }
 
-/* Page header (formerly standalone header) */
 .header {
   display: flex;
   align-items: center;
@@ -649,7 +599,6 @@ a { color: inherit; text-decoration: none; }
   gap: 12px;
 }
 
-/* Refresh button */
 .refresh-btn {
   display: flex;
   align-items: center;
@@ -678,7 +627,6 @@ a { color: inherit; text-decoration: none; }
 .refresh-icon { font-size: 16px; }
 .refreshing .refresh-icon { animation: spin 0.8s linear infinite; }
 
-/* User */
 .user {
   display: flex;
   align-items: center;
@@ -711,8 +659,6 @@ a { color: inherit; text-decoration: none; }
   font-size: 11px;
   color: var(--text-muted);
 }
-
-/* ── Hero ── */
 
 .hero {
   display: flex;
@@ -820,8 +766,6 @@ a { color: inherit; text-decoration: none; }
 .text-success { color: var(--positive) !important; }
 .text-danger  { color: var(--negative) !important; }
 
-/* ── Main + Summary ── */
-
 main {
   flex: 1;
   padding: 32px;
@@ -882,8 +826,6 @@ main {
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-
-/* ── Stock grid & cards ── */
 
 .stock-grid {
   display: grid;
@@ -1008,7 +950,6 @@ main {
   color: var(--negative);
 }
 
-/* Price block */
 .stock-price-block {
   display: flex;
   align-items: flex-end;
@@ -1054,7 +995,6 @@ main {
 .delta-pct   { font-size: 12px !important; }
 .delta-label { font-size: 10px !important; font-weight: 500 !important; color: var(--text-muted) !important; }
 
-/* Stock details block */
 .stock-details {
   display: flex;
   flex-direction: column;
@@ -1087,7 +1027,6 @@ main {
 .detail-value.text-success { color: var(--positive) !important; }
 .detail-value.text-danger  { color: var(--negative) !important; }
 
-/* Intent badges */
 .intent-badge {
   font-size: 11px;
   font-weight: 700;
@@ -1110,7 +1049,6 @@ main {
   border: 1px solid var(--warning-border);
 }
 
-/* Stock footer */
 .stock-footer {
   display: flex;
   align-items: center;
@@ -1162,8 +1100,6 @@ main {
   box-shadow: 0 4px 16px rgba(124, 58, 237, 0.45);
   transform: translateY(-1px);
 }
-
-/* ── Attention / Alerts ── */
 
 .attention-list {
   display: flex;
@@ -1309,10 +1245,6 @@ main {
   color: var(--text-muted);
 }
 
-/* =====================================================
-   EMPTY / ERROR / LOADING
-   ===================================================== */
-
 .empty {
   display: flex;
   flex-direction: column;
@@ -1351,7 +1283,6 @@ main {
 .error-screen h2 { font-size: 20px; font-weight: 700; color: var(--text); margin: 0; }
 .error-screen p  { font-size: 14px; color: var(--text-secondary); margin: 0; max-width: 400px; }
 
-/* Skeletons */
 .skeleton {
   background: linear-gradient(
     90deg,
@@ -1369,10 +1300,6 @@ main {
 .skeleton-card   { height: 96px;  border-radius: var(--r-lg); }
 .skeleton-section{ display: flex; flex-direction: column; gap: 12px; }
 .skeleton-stock  { height: 78px;  border-radius: var(--r-lg); }
-
-/* =====================================================
-   MODALS
-   ===================================================== */
 
 .modal-overlay {
   position: fixed;
@@ -1434,7 +1361,6 @@ main {
 .confirm-desc strong { color: var(--text); }
 .confirm-actions { display: flex; gap: 10px; justify-content: center; }
 
-/* Forms */
 .search-box { padding: 14px 22px; }
 
 .search-box input {
@@ -1596,10 +1522,6 @@ main {
   width: calc(100% - 44px);
 }
 
-/* =====================================================
-   STOCK DETAIL PAGE
-   ===================================================== */
-
 .stock-detail-page {
   flex: 1;
   animation: fadeIn 0.2s ease;
@@ -1699,10 +1621,6 @@ main {
 .stock-stat-card span   { font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .stock-stat-card strong { font-size: 17px; font-weight: 800; color: var(--text); }
 
-/* =====================================================
-   FILTER / TABS (shared)
-   ===================================================== */
-
 .filter-bar {
   display: flex;
   align-items: center;
@@ -1754,10 +1672,6 @@ main {
 }
 .sort-select:focus { border-color: var(--purple); }
 
-/* =====================================================
-   METRIC CARDS (Insights, Market)
-   ===================================================== */
-
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -1781,10 +1695,6 @@ main {
 .metric-label { font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
 .metric-value { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1; font-variant-numeric: tabular-nums; }
 .metric-sub   { font-size: 11.5px; color: var(--text-secondary); }
-
-/* =====================================================
-   MARKET STATUS BANNER
-   ===================================================== */
 
 .market-status-banner {
   display: flex;
@@ -1833,10 +1743,6 @@ main {
 
 .market-status-text strong { display: block; font-size: 17px; font-weight: 800; color: var(--text); }
 .market-status-text span   { font-size: 13px; color: var(--text-secondary); }
-
-/* =====================================================
-   NEWS CARDS
-   ===================================================== */
 
 .news-grid {
   display: grid;
@@ -1954,10 +1860,6 @@ main {
   transform: translateX(2px);
 }
 
-/* =====================================================
-   SETTINGS
-   ===================================================== */
-
 .settings-grid { display: flex; flex-direction: column; gap: 20px; }
 
 .settings-section {
@@ -1988,7 +1890,6 @@ main {
 .settings-row-label strong { display: block; font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
 .settings-row-label span   { font-size: 12px; color: var(--text-secondary); }
 
-/* Toggle */
 .toggle {
   position: relative;
   display: inline-block;
@@ -2041,7 +1942,6 @@ main {
 }
 .settings-select:focus { border-color: var(--purple); box-shadow: 0 0 0 3px var(--purple-dim); }
 
-/* Inline search */
 .inline-search { position: relative; margin-bottom: 18px; }
 
 .inline-search input {
@@ -2066,10 +1966,6 @@ main {
   font-size: 15px;
   pointer-events: none;
 }
-
-/* =====================================================
-   INSIGHTS
-   ===================================================== */
 
 .insight-grid {
   display: grid;
@@ -2140,10 +2036,6 @@ main {
   letter-spacing: -0.01em;
 }
 
-/* =====================================================
-   PAGE SHELL (legacy placeholder — kept for safety)
-   ===================================================== */
-
 .page-shell { flex: 1; }
 .page-shell-header { padding: 28px 32px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
 .page-shell-header h1 { font-size: 28px; font-weight: 800; color: var(--text); margin: 0 0 6px; }
@@ -2155,10 +2047,6 @@ main {
 .page-shell-status { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: var(--positive); background: var(--positive-dim); border: 1px solid var(--positive-border); padding: 3px 8px; border-radius: 999px; margin-bottom: 8px; }
 .page-shell-card h2 { font-size: 18px; font-weight: 700; color: var(--text); margin: 0 0 6px; }
 .page-shell-card p  { font-size: 13.5px; color: var(--text-secondary); margin: 0; line-height: 1.5; }
-
-/* =====================================================
-   RESPONSIVE / MOBILE
-   ===================================================== */
 
 @media (max-width: 768px) {
   .sidebar {
@@ -2202,12 +2090,6 @@ main {
   .hero-stat-divider { display: none; }
 }
 
-/* End responsive adjustments */
-
-/* =====================================================
-   MOBILE SIDEBAR TOGGLE + OVERLAY
-   ===================================================== */
-
 .sidebar-toggle {
   display: none;
   position: fixed;
@@ -2235,10 +2117,6 @@ main {
   animation: fadeIn 0.2s ease;
 }
 .sidebar-overlay.visible { display: block; }
-
-/* =====================================================
-   ALERT / ATTENTION CARD EXTRAS
-   ===================================================== */
 
 .attention-type-label {
   font-size: 10.5px;
@@ -2272,10 +2150,6 @@ main {
 
 .attention-time { font-size: 11px; color: var(--text-muted); margin-left: auto; }
 
-/* =====================================================
-   CONFIRM MODAL + BTN VARIANTS
-   ===================================================== */
-
 .modal-confirm { text-align: center; padding: 36px 28px; }
 .confirm-icon  { font-size: 44px; margin-bottom: 16px; }
 .modal-confirm h2 { font-size: 20px; font-weight: 800; color: var(--text); margin: 0 0 10px; }
@@ -2308,7 +2182,6 @@ main {
 
 .btn-full { width: 100%; margin: 0; }
 
-/* Form inputs in modal */
 .form-group { padding: 0 22px 16px; }
 .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
 .optional { font-weight: 400; text-transform: none; letter-spacing: 0; }
@@ -2349,7 +2222,6 @@ main {
   font-weight: 600;
 }
 
-/* Intent options */
 .intent-options {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2372,7 +2244,6 @@ main {
 .intent-option.active { border-color: var(--purple); background: var(--purple-dim); box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
 .intent-option.active strong { color: var(--purple-light); }
 
-/* Stock selection list */
 .stock-selection-list { max-height: 320px; overflow-y: auto; padding: 0 14px 14px; }
 .stock-option {
   display: flex;
@@ -2396,7 +2267,6 @@ main {
 .stock-option-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .already-added-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--positive); background: var(--positive-dim); border: 1px solid var(--positive-border); padding: 2px 6px; border-radius: 999px; }
 
-/* Selected stock display in modal */
 .selected-stock {
   display: flex;
   justify-content: space-between;
@@ -2413,10 +2283,6 @@ main {
 .change-stock { font-size: 12px; font-weight: 600; color: var(--purple-light); background: transparent; border: 1px solid var(--purple-border); border-radius: var(--r-xs); padding: 5px 10px; cursor: pointer; transition: all var(--t-base); flex-shrink: 0; }
 .change-stock:hover { background: var(--purple-dim); }
 
-/* =====================================================
-   SECTION LAYOUT HELPERS
-   ===================================================== */
-
 .section { margin-bottom: 36px; }
 .section-heading {
   display: flex;
@@ -2428,20 +2294,12 @@ main {
 .section-heading h2 { font-size: 17px; font-weight: 800; color: var(--text); margin: 0; }
 .count { font-size: 11.5px; font-weight: 700; color: var(--text-muted); background: var(--surface-raised); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
 
-/* =====================================================
-   METRIC GRID (market page)
-   ===================================================== */
-
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 14px;
   margin-bottom: 28px;
 }
-
-/* =====================================================
-   FILTER BAR
-   ===================================================== */
 
 .filter-bar {
   display: flex;
@@ -2490,10 +2348,6 @@ main {
 }
 .sort-select:focus { border-color: var(--purple); }
 
-/* =====================================================
-   STOCK CARD EXTRAS
-   ===================================================== */
-
 .remove-btn {
   background: transparent;
   border: 1px solid transparent;
@@ -2515,10 +2369,6 @@ main {
 .text-success { color: var(--positive) !important; }
 .text-danger  { color: var(--negative) !important; }
 
-/* =====================================================
-   SKELETON LOADERS EXTRAS
-   ===================================================== */
-
 .skeleton-section { display: flex; flex-direction: column; gap: 14px; }
 .skeleton-stock {
   height: 72px;
@@ -2527,10 +2377,6 @@ main {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
-
-/* =====================================================
-   STOCK DETAILS PAGE — ULTRA-PREMIUM FINTECH TERMINAL
-   ===================================================== */
 
 .stock-detail-page {
   padding: 28px 36px 56px;
@@ -2631,7 +2477,6 @@ main {
   color: var(--text-muted);
 }
 
-/* Hero Chart Card */
 .stock-chart-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -2754,7 +2599,6 @@ main {
   margin-top: 12px;
 }
 
-/* Custom Tooltip */
 .custom-stock-tooltip {
   background: rgba(13, 13, 26, 0.95);
   backdrop-filter: blur(12px);
@@ -2777,7 +2621,6 @@ main {
   color: #FFFFFF;
 }
 
-/* Stat Grid */
 .stock-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -2820,9 +2663,6 @@ main {
   .chart-stage { height: 320px; }
 }
 
-/* =====================================================
-   AUTHENTICATION & USER PROFILE STYLES
-   ===================================================== */
 .auth-viewport {
   min-height: 100vh;
   width: 100%;
@@ -3157,7 +2997,6 @@ main {
   text-decoration: underline;
 }
 
-/* User profile widget in sidebar */
 .sidebar-user-section {
   padding: 12px 14px;
   margin-bottom: 8px;

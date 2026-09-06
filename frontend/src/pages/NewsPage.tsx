@@ -23,10 +23,10 @@ interface NewsResponse {
 type Category = "general" | "business" | "technology" | "world";
 
 const CATEGORIES: { key: Category; label: string; icon: string }[] = [
-    { key: "general", label: "Market", icon: "📊" },
-    { key: "business", label: "Business", icon: "💼" },
-    { key: "technology", label: "Technology", icon: "💻" },
-    { key: "world", label: "Global", icon: "🌐" },
+    { key: "general", label: "Market", icon: "◈" },
+    { key: "business", label: "Business", icon: "◇" },
+    { key: "technology", label: "Technology", icon: "◆" },
+    { key: "world", label: "Global", icon: "◎" },
 ];
 
 function timeAgo(iso: string) {
@@ -34,7 +34,6 @@ function timeAgo(iso: string) {
     catch { return "recently"; }
 }
 
-// Client-side cache so switching categories is instant with 0ms perceived lag
 const newsClientCache = new Map<string, NewsResponse>();
 
 export default function NewsPage() {
@@ -45,7 +44,6 @@ export default function NewsPage() {
     const [search, setSearch] = useState("");
 
     const load = async (cat: Category) => {
-        // Instant render from client cache
         if (newsClientCache.has(cat)) {
             setData(newsClientCache.get(cat)!);
             setLoading(false);
@@ -95,7 +93,6 @@ export default function NewsPage() {
             </div>
 
             <div className="page-body">
-                {/* Category tabs */}
                 <div className="filter-bar">
                     <div className="filter-tabs">
                         {CATEGORIES.map((c) => (
@@ -110,9 +107,13 @@ export default function NewsPage() {
                     </div>
                 </div>
 
-                {/* Search */}
                 <div className="inline-search">
-                    <span className="inline-search-icon">🔍</span>
+                    <span className="inline-search-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.3-4.3"/>
+                        </svg>
+                    </span>
                     <input
                         type="text"
                         placeholder="Search headlines…"
@@ -121,7 +122,6 @@ export default function NewsPage() {
                     />
                 </div>
 
-                {/* Content */}
                 {loading && (
                     <div className="news-grid">
                         {[0,1,2,3,4].map((i) => (
@@ -132,7 +132,7 @@ export default function NewsPage() {
 
                 {!loading && error && (
                     <div className="error-screen" style={{ minHeight: "auto", padding: "40px 0" }}>
-                        <div className="error-icon">⚠️</div>
+                        <div className="error-icon">!</div>
                         <h2>Could not load news</h2>
                         <p>{error}</p>
                         <button className="btn-primary" style={{ marginTop: 16 }} onClick={() => load(category)}>Retry</button>
@@ -147,7 +147,7 @@ export default function NewsPage() {
                     <>
                         {filtered.length === 0 ? (
                             <div className="empty">
-                                <div className="empty-icon">🔍</div>
+                                <div className="empty-icon">◈</div>
                                 <h3>No articles found</h3>
                                 <p>{search ? `No results for "${search}"` : "No articles in this category right now."}</p>
                             </div>
@@ -207,7 +207,7 @@ export default function NewsPage() {
 function NewsNotConfigured() {
     return (
         <div className="empty" style={{ padding: "56px 32px" }}>
-            <div className="empty-icon">📰</div>
+            <div className="empty-icon">◫</div>
             <h3>News feed not configured</h3>
             <p style={{ maxWidth: 420, lineHeight: 1.6 }}>
                 To enable live financial news, add a GNews API key to your backend environment.

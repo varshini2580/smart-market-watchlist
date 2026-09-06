@@ -7,11 +7,9 @@ export const getDashboard = async (
   res: Response
 ) => {
   try {
-    // Prefer authenticated user from session/token
     let userId = req.user?.id;
     const paramUserId = typeof req.params.userId === "string" ? req.params.userId : undefined;
 
-    // Validate ownership if client provided a userId parameter
     if (paramUserId) {
       if (userId && userId !== paramUserId) {
         return res.status(403).json({
@@ -56,10 +54,6 @@ export const getDashboard = async (
   }
 };
 
-/**
- * On-demand refresh: fetch stale market data, run change detection,
- * return the updated dashboard. Called by the frontend refresh button.
- */
 export const refreshDashboard = async (
   req: AuthRequest,
   res: Response

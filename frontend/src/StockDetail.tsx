@@ -141,7 +141,6 @@ function StockDetail() {
 
     const isPositive = (changePercent ?? 0) >= 0;
 
-    // Period stats
     const periodStats = useMemo(() => {
         if (!prices.length) return { high: null, low: null };
         const nums = prices.map((p) => p.price);
@@ -156,7 +155,6 @@ function StockDetail() {
 
     return (
         <main className="stock-detail-page">
-            {/* Top Navigation */}
             <div className="stock-detail-top-nav">
                 <Link to="/watchlist" className="btn-back">
                     <span>←</span>
@@ -177,7 +175,6 @@ function StockDetail() {
                 </div>
             </div>
 
-            {/* Header Identity */}
             <div className="stock-detail-header-card">
                 <div className="stock-detail-title-group">
                     <p className="eyebrow">EQUITY DETAILS</p>
@@ -191,7 +188,6 @@ function StockDetail() {
                 </div>
             </div>
 
-            {/* Main Interactive Chart Card */}
             <section className="stock-chart-card">
                 {loading ? (
                     <div style={{ padding: "60px 0", textAlign: "center" }}>
@@ -206,7 +202,7 @@ function StockDetail() {
                     </div>
                 ) : error ? (
                     <div className="error-screen" style={{ minHeight: "380px" }}>
-                        <div className="error-icon">⚠️</div>
+                        <div className="error-icon">!</div>
                         <h2>Unable to load stock details</h2>
                         <p>{error}</p>
                         <button
@@ -219,7 +215,6 @@ function StockDetail() {
                     </div>
                 ) : (
                     <>
-                        {/* Price & Range Header */}
                         <div className="chart-header-row">
                             <div className="price-hero-section">
                                 <span className="price-hero-label">Current Market Price</span>
@@ -246,7 +241,6 @@ function StockDetail() {
                                 </div>
                             </div>
 
-                            {/* Range Selector */}
                             <div className="range-selector-bar">
                                 {(
                                     ["1d", "1w", "1m", "3m", "6m", "1y"] as Range[]
@@ -262,7 +256,6 @@ function StockDetail() {
                             </div>
                         </div>
 
-                        {/* Chart Stage */}
                         <div className="chart-stage">
                             {chartData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height="100%">
@@ -373,7 +366,6 @@ function StockDetail() {
                 )}
             </section>
 
-            {/* Quick Stat Summary Cards */}
             <div className="stock-stats-grid">
                 <div className="stock-stat-box">
                     <p className="stat-box-label">Period High</p>

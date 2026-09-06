@@ -14,7 +14,6 @@ import newsRoutes from "./routes/news.routes";
 
 const app = express();
 
-// Allowed origins for CORS (supports local development and production Render domains)
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   "http://localhost:5173",
@@ -26,7 +25,6 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, server-to-server)
       if (!origin) return callback(null, true);
 
       if (

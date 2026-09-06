@@ -8,10 +8,6 @@ const PRICE_HIGH_THRESHOLD = 5;
 const VOLUME_MEDIUM_MULTIPLIER = 2;
 const VOLUME_HIGH_MULTIPLIER = 3;
 
-/**
- * Minimum additional change required to fire another LARGE_PRICE_CHANGE
- * event in the same direction, preventing repetitive alerts for a slow trend.
- */
 const LARGE_PRICE_CHANGE_REPEAT_THRESHOLD = 2;
 
 export const changeDetectionService = {
@@ -44,10 +40,7 @@ export const changeDetectionService = {
       await checkpointRepository.get(userId, stock.id);
 
     if (!checkpoint) {
-      /*
-       * If no baseline checkpoint exists yet for this user and stock,
-       * initialize it from the latest market snapshot so future checks have a reference point.
-       */
+
       await checkpointRepository.upsert(
         userId,
         stock.id,
@@ -75,9 +68,6 @@ export const changeDetectionService = {
 
     const absoluteChangePercent = Math.abs(changePercent);
 
-    /*
-     * Get the user's watchlist context.
-     */
     const watchlistItem = await prisma.watchlistItem.findFirst({
       where: {
         stockId: stock.id,
@@ -85,9 +75,6 @@ export const changeDetectionService = {
       },
     });
 
-    /*
-     * Find the most recent attention event for this user + stock.
-     */
     const previousEvent =
       await prisma.attentionEvent.findFirst({
         where: {
@@ -99,9 +86,6 @@ export const changeDetectionService = {
         },
       });
 
-    /*
-     * Determine whether target is currently crossed.
-     */
     let targetCrossed = false;
 
     if (
@@ -112,9 +96,6 @@ export const changeDetectionService = {
       targetCrossed = currentPrice >= targetPrice;
     }
 
-    /*
-     * Determine whether purchase price is currently crossed below.
-     */
     let purchasePriceCrossed = false;
 
     if (
@@ -134,30 +115,11 @@ export const changeDetectionService = {
 
     let severity: "LOW" | "MEDIUM" | "HIGH" | null = null;
 
-    /*
-     * 1. TARGET_REACHED
-     *
-     * Fire when target is crossed and the previous event
-     * was NOT also TARGET_REACHED (prevents re-firing while
-     * price stays above target).
-     *
-     * If the price later dips below and crosses again,
-     * the previous event type will have changed, so it fires again.
-     */
     if (targetCrossed && previousEvent?.type !== "TARGET_REACHED") {
       type = "TARGET_REACHED";
       severity = "HIGH";
     }
 
-    /*
-     * 2. PURCHASE_PRICE_CROSSED
-     *
-     * Fire when price drops at or below purchase price and the
-     * previous event was NOT already PURCHASE_PRICE_CROSSED.
-     *
-     * If price recovers and drops again, previous event type
-     * will differ, allowing a new event.
-     */
     if (
       !type &&
       purchasePriceCrossed &&
@@ -167,14 +129,6 @@ export const changeDetectionService = {
       severity = "HIGH";
     }
 
-    /*
-     * 3. LARGE_PRICE_CHANGE
-     *
-     * Deduplication rule: skip if the last event was also
-     * LARGE_PRICE_CHANGE in the same direction AND the new
-     * movement is less than REPEAT_THRESHOLD additional percent.
-     * This prevents flooding for slow-moving continued trends.
-     */
     if (!type && absoluteChangePercent >= PRICE_MEDIUM_THRESHOLD) {
       let candidateSeverity: "MEDIUM" | "HIGH" =
         absoluteChangePercent >= PRICE_HIGH_THRESHOLD
@@ -192,8 +146,6 @@ export const changeDetectionService = {
           prevChangePercent >= 0 ? "up" : "down";
         const currDirection = changePercent >= 0 ? "up" : "down";
 
-        // Same direction: only fire if the new move is at least
-        // REPEAT_THRESHOLD % more than the previous event reported.
         if (prevDirection === currDirection) {
           const additionalMove =
             Math.abs(absoluteChangePercent) -
@@ -203,7 +155,6 @@ export const changeDetectionService = {
             shouldFire = false;
           }
         }
-        // Direction reversed → always fire (new signal)
       }
 
       if (shouldFire) {
@@ -212,12 +163,6 @@ export const changeDetectionService = {
       }
     }
 
-    /*
-     * 4. VOLUME_SPIKE
-     *
-     * Deduplication: skip if last event was already VOLUME_SPIKE
-     * at the same or higher severity.
-     */
     if (!type && current.volume !== null) {
       const previousSnapshot =
         await prisma.marketSnapshot.findFirst({
@@ -248,7 +193,6 @@ export const changeDetectionService = {
           }
 
           if (candidateVolumeSeverity) {
-            // Skip if same or lower severity already fired
             const alreadyFired =
               previousEvent?.type === "VOLUME_SPIKE" &&
               (previousEvent.severity === candidateVolumeSeverity ||
@@ -263,9 +207,6 @@ export const changeDetectionService = {
       }
     }
 
-    /*
-     * Nothing meaningful happened — update checkpoint and exit.
-     */
     if (!type || !severity) {
       await checkpointRepository.upsert(
         userId,
@@ -282,10 +223,6 @@ export const changeDetectionService = {
       };
     }
 
-    /*
-     * Prevent duplicate events for the exact same snapshot.
-     * (userId + snapshotId must be unique per DB constraint)
-     */
     const existingEvent =
       await prisma.attentionEvent.findUnique({
         where: {
@@ -307,9 +244,6 @@ export const changeDetectionService = {
       };
     }
 
-    /*
-     * Create the attention event.
-     */
     const event = await prisma.attentionEvent.create({
       data: {
         userId,
@@ -323,10 +257,6 @@ export const changeDetectionService = {
       },
     });
 
-    /*
-     * Update checkpoint so future detections compare
-     * from the current price.
-     */
     await checkpointRepository.upsert(
       userId,
       stock.id,

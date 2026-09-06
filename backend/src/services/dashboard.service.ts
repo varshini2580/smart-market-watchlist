@@ -14,11 +14,6 @@ export const dashboardService = {
     return formatDashboard(data);
   },
 
-  /**
-   * Refresh market data for all user stocks (only if stale),
-   * run change detection, and return the updated dashboard.
-   * This is the on-demand refresh endpoint called by the frontend.
-   */
   async refreshAndDetect(userId: string) {
     const data =
       await dashboardRepository.getDashboard(userId);
@@ -27,7 +22,6 @@ export const dashboardService = {
       return null;
     }
 
-    // Collect unique stocks across all watchlists
     const seen = new Set<string>();
 
     const stocksToRefresh = data.watchlists
@@ -40,7 +34,6 @@ export const dashboardService = {
       })
       .map((item) => item.stock);
 
-    // For each unique stock: refresh if stale, then detect
     for (const stock of stocksToRefresh) {
       try {
         await marketService.refreshIfStale(
@@ -54,7 +47,6 @@ export const dashboardService = {
           stock.exchange
         );
       } catch (err) {
-        // Log but do not crash the whole refresh for one stock
         console.error(
           `Refresh/detect failed for ${stock.symbol}:`,
           err
@@ -62,7 +54,6 @@ export const dashboardService = {
       }
     }
 
-    // Re-fetch the dashboard with updated data
     const updated =
       await dashboardRepository.getDashboard(userId);
 
@@ -72,9 +63,6 @@ export const dashboardService = {
   },
 };
 
-/**
- * Shared formatting logic for dashboard data.
- */
 function formatDashboard(
   data: Awaited<
     ReturnType<typeof dashboardRepository.getDashboard>

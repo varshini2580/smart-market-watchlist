@@ -14,13 +14,6 @@ export interface AuthRequest extends Request {
 const JWT_SECRET =
   process.env.JWT_SECRET || "smw-jwt-secret-dev-key-change-in-production";
 
-/**
- * Authentication middleware that verifies JWT token from:
- * 1. HttpOnly Cookie ('token')
- * 2. Authorization Header ('Bearer <token>')
- *
- * Populates req.user if valid. Returns 401 Unauthorized otherwise.
- */
 export const requireAuth = (
   req: AuthRequest,
   res: Response,
@@ -29,12 +22,10 @@ export const requireAuth = (
   try {
     let token: string | undefined;
 
-    // 1. Check HttpOnly cookie
     if (req.cookies && req.cookies.token) {
       token = req.cookies.token;
     }
 
-    // 2. Check Authorization header (Bearer token fallback for cross-domain / mobile)
     if (!token && req.headers.authorization) {
       const parts = req.headers.authorization.split(" ");
       if (parts.length === 2 && parts[0] === "Bearer") {
@@ -65,10 +56,6 @@ export const requireAuth = (
   }
 };
 
-/**
- * Optional authentication middleware:
- * Populates req.user if valid token exists, but does NOT reject if missing.
- */
 export const optionalAuth = (
   req: AuthRequest,
   _res: Response,
@@ -95,7 +82,6 @@ export const optionalAuth = (
       };
     }
   } catch {
-    // Non-fatal for optional auth
   }
 
   return next();

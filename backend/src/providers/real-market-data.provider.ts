@@ -24,7 +24,6 @@ function yahooSymbol(symbol: string, exchange: string): string {
         return `${normalizedSymbol}.BO`;
     }
 
-    // Allow already-qualified Yahoo symbols.
     if (normalizedSymbol.includes(".")) {
         return normalizedSymbol;
     }
@@ -168,13 +167,11 @@ export class RealMarketDataProvider
     private marketStatusCache: { status: MarketStatus; timestamp: number } | null = null;
 
     async getMarketStatus(): Promise<MarketStatus> {
-        // 1. Return cached market status if fresh (within 2 minutes)
         if (this.marketStatusCache && Date.now() - this.marketStatusCache.timestamp < 120_000) {
             return this.marketStatusCache.status;
         }
 
         try {
-            // 2. Query Yahoo Finance with a 2.5s timeout guard so page navigation never hangs
             const quotePromise = yahooFinance.quote("^NSEI");
             const timeoutPromise = new Promise<never>((_, reject) =>
                 setTimeout(() => reject(new Error("Market status query timed out")), 2500)
@@ -216,7 +213,6 @@ export class RealMarketDataProvider
     }
 
     private getNseScheduleStatus(): MarketStatus {
-        // Standard NSE hours in Indian Standard Time (UTC+5:30)
         const now = new Date();
         const istTime = new Date(now.getTime() + (330 + now.getTimezoneOffset()) * 60000);
         const day = istTime.getDay(); // 0 = Sun, 6 = Sat

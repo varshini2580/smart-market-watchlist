@@ -21,13 +21,10 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Ensure axios sends cookies with every request
 axios.defaults.withCredentials = true;
 
-// Key for fallback token storage (ensures cross-domain session persistence on Safari/Render)
 const TOKEN_STORAGE_KEY = "smw_auth_token";
 
-// Attach Bearer token to all outgoing requests if available
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem(TOKEN_STORAGE_KEY);
   if (token && !config.headers.Authorization) {
@@ -60,13 +57,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checkAuth();
   }, [checkAuth]);
 
-  // Handle 401 Unauthorized globally
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response?.status === 401 && !error.config?.url?.includes("/auth/login")) {
-          // Avoid triggering on failed login attempts
           if (user) {
             setUser(null);
             localStorage.removeItem(TOKEN_STORAGE_KEY);
@@ -119,7 +114,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await axios.post(`${API_URL}/auth/logout`);
     } catch {
-      // Continue even if network error
     } finally {
       localStorage.removeItem(TOKEN_STORAGE_KEY);
       setUser(null);

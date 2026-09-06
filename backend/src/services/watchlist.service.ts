@@ -46,7 +46,6 @@ export const watchlistService = {
       targetPrice
     );
 
-    // Create an initial checkpoint if market data exists
     const latestSnapshot =
       await marketRepository.getLatestSnapshot(stockId);
 
@@ -67,10 +66,6 @@ export const watchlistService = {
     return watchlistItem;
   },
 
-  /**
-   * Securely remove a watchlist item by its own ID.
-   * Validates that the item belongs to the requesting user's watchlist.
-   */
   async removeStockByItemId(userId: string, itemId: string) {
     if (!userId || !itemId) {
       throw new Error("User ID and item ID are required");
@@ -82,7 +77,6 @@ export const watchlistService = {
       throw new Error("Watchlist item not found");
     }
 
-    // Ownership check: item → watchlist → userId must match
     if (item.watchlist.userId !== userId) {
       throw new Error(
         "You do not have permission to remove this item"
@@ -92,7 +86,6 @@ export const watchlistService = {
     return watchlistRepository.removeItemById(itemId);
   },
 
-  /** Legacy: remove by watchlistId + stockId */
   async removeStock(watchlistId: string, stockId: string) {
     return watchlistRepository.removeStock(watchlistId, stockId);
   },

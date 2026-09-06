@@ -64,10 +64,6 @@ export const watchlistRepository = {
     });
   },
 
-  /**
-   * Find a watchlist item by its own ID,
-   * including its parent watchlist for ownership checks.
-   */
   async findItemById(itemId: string) {
     return prisma.watchlistItem.findUnique({
       where: { id: itemId },
@@ -78,17 +74,12 @@ export const watchlistRepository = {
     });
   },
 
-  /**
-   * Remove a watchlist item by its own ID.
-   * Caller must validate ownership before calling.
-   */
   async removeItemById(itemId: string) {
     return prisma.watchlistItem.delete({
       where: { id: itemId },
     });
   },
 
-  /** Legacy: remove by watchlistId + stockId (kept for backward compat) */
   async removeStock(watchlistId: string, stockId: string) {
     return prisma.watchlistItem.delete({
       where: {

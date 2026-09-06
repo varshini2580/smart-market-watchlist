@@ -61,12 +61,10 @@ export default function WatchlistPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Filters & sort
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState<FilterKey>("all");
     const [sort, setSort] = useState<SortKey>("symbol");
 
-    // Add stock modal
     const [showAdd, setShowAdd] = useState(false);
     const [addStep, setAddStep] = useState<"select" | "configure">("select");
     const [addSearch, setAddSearch] = useState("");
@@ -77,11 +75,9 @@ export default function WatchlistPage() {
     const [addError, setAddError] = useState("");
     const [adding, setAdding] = useState(false);
 
-    // Remove modal
     const [removeItem, setRemoveItem] = useState<WatchlistItem | null>(null);
     const [removing, setRemoving] = useState(false);
 
-    // Toast
     const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
 
     const showToast = (msg: string, type: "success" | "error" = "success") => {
@@ -165,7 +161,6 @@ export default function WatchlistPage() {
 
     useEffect(() => { load(); }, []);
 
-    // Flatten all items
     const allItems: WatchlistItem[] = useMemo(
         () => (watchlists || []).flatMap((w) => w.items || []),
         [watchlists]
@@ -173,7 +168,6 @@ export default function WatchlistPage() {
 
     const primaryWatchlist = watchlists[0] ?? null;
 
-    // Filtered + sorted items
     const displayed = useMemo(() => {
         let items = [...allItems];
         if (filter === "holding") items = items.filter((i) => i.intent === "HOLDING");
@@ -288,7 +282,7 @@ export default function WatchlistPage() {
         return (
             <div className="page">
                 <div className="error-screen">
-                    <div className="error-icon">⚠️</div>
+                    <div className="error-icon">!</div>
                     <h2>Could not load watchlist</h2>
                     <p>{error}</p>
                     <button className="btn-primary" style={{ marginTop: 16 }} onClick={load}>
@@ -301,7 +295,6 @@ export default function WatchlistPage() {
 
     return (
         <div className="page">
-            {/* Toast */}
             {toast && (
                 <div className="toast-container">
                     <div className={`toast toast-${toast.type}`}>
@@ -311,7 +304,6 @@ export default function WatchlistPage() {
                 </div>
             )}
 
-            {/* Top bar */}
             <div className="page-topbar">
                 <div className="page-topbar-left">
                     <p className="eyebrow">PORTFOLIO TRACKING</p>
@@ -326,7 +318,6 @@ export default function WatchlistPage() {
             </div>
 
             <div className="page-body">
-                {/* Filter bar */}
                 <div className="filter-bar">
                     <div className="filter-tabs">
                         {(["all", "holding", "interested"] as FilterKey[]).map((f) => (
@@ -351,9 +342,13 @@ export default function WatchlistPage() {
                     </select>
                 </div>
 
-                {/* Search */}
                 <div className="inline-search" style={{ marginBottom: 24 }}>
-                    <span className="inline-search-icon">🔍</span>
+                    <span className="inline-search-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.3-4.3"/>
+                        </svg>
+                    </span>
                     <input
                         type="text"
                         placeholder="Search by symbol or company name…"
@@ -362,10 +357,9 @@ export default function WatchlistPage() {
                     />
                 </div>
 
-                {/* Stock grid */}
                 {displayed.length === 0 ? (
                     <div className="empty">
-                        <div className="empty-icon">{search ? "🔍" : "☆"}</div>
+                        <div className="empty-icon">{search ? "◈" : "☆"}</div>
                         <h3>{search ? "No results found" : "Your watchlist is empty"}</h3>
                         <p>
                             {search
@@ -481,7 +475,6 @@ export default function WatchlistPage() {
                 )}
             </div>
 
-            {/* Add Stock Modal */}
             {showAdd && (
                 <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) { setShowAdd(false); resetAdd(); } }}>
                     <div className="modal">
@@ -603,11 +596,10 @@ export default function WatchlistPage() {
                 </div>
             )}
 
-            {/* Remove confirm modal */}
             {removeItem && (
                 <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setRemoveItem(null); }}>
                     <div className="modal modal-confirm">
-                        <div className="confirm-icon">🗑️</div>
+                        <div className="confirm-icon">✕</div>
                         <h2>Remove Stock</h2>
                         <p className="confirm-desc">
                             Remove <strong>{removeItem.stock.symbol}</strong> ({removeItem.stock.name}) from your watchlist? This cannot be undone.

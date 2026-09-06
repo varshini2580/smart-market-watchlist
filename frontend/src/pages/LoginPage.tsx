@@ -51,7 +51,7 @@ export default function LoginPage() {
 
       <div className="auth-card">
         <div className="auth-brand-header">
-          <div className="auth-brand-mark">◈</div>
+          <img src="/favicon.svg" alt="Smart Market Watchlist" className="auth-brand-mark" />
           <h1 className="auth-title">SMART MARKET WATCHLIST</h1>
           <p className="auth-subtitle">
             Track what matters. Understand what changed.

@@ -10,6 +10,14 @@ import {
 const marketProvider = new RealMarketDataProvider();
 
 export const marketService = {
+  /**
+   * Fetch a live quote directly from Yahoo Finance without requiring
+   * the symbol to be seeded in the database first.
+   */
+  async fetchQuoteDirect(symbol: string, exchange: string) {
+    return marketProvider.getQuote(symbol, exchange);
+  },
+
   async fetchAndStoreQuote(
     symbol: string,
     exchange: string
@@ -19,8 +27,15 @@ export const marketService = {
       exchange
     );
 
+    // If stock not yet in DB, still return live quote data without persisting
     if (!stock) {
-      throw new Error("Stock not found");
+      const quote = await marketProvider.getQuote(symbol, exchange);
+      return {
+        price: quote.price,
+        volume: quote.volume,
+        marketTimestamp: quote.marketTimestamp,
+        source: quote.source,
+      };
     }
 
     const quote = await marketProvider.getQuote(
